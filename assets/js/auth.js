@@ -1,0 +1,4 @@
+
+async function handleRegister(e){ e.preventDefault(); const email=reg_email.value.trim(); const password=reg_password.value.trim(); const fullName=reg_fullname.value.trim(); const {error}=await supabaseClient.auth.signUp({ email, password, options:{data:{full_name:fullName}} }); if(error) return alert(error.message); alert('Check your email to confirm your account.'); window.location.href='login.html'; }
+async function handleLogin(e){ e.preventDefault(); const email=login_email.value.trim(); const password=login_password.value.trim(); const {error}=await supabaseClient.auth.signInWithPassword({email,password}); if(error) return alert(error.message); window.location.href='dashboard.html'; }
+async function handleLogout(){ await supabaseClient.auth.signOut(); window.location.href='index.html'; }
