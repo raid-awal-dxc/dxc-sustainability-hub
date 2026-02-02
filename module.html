@@ -57,6 +57,23 @@
   const userObj = await getCurrentUser();
   const moduleRoot = document.getElementById('module');
 
+  const lessons = mod.lessons?.sort((a,b)=>a.order_index - b.order_index) || [];
+  let completedLessonIds = [];
+  if (userObj) {
+    completedLessonIds = await getCompletedLessonIds(userObj.id, lessons.map(l => l.id));
+  }
+
+  async function updateModuleProgress() {
+    const totalItems = lessons.length + 1;
+    const completedLessons = completedLessonIds.length;
+    const enroll = await getOrCreateEnrollment(userObj.id, mod.id);
+    const quizCompleted = await hasPassedQuiz(userObj.id, mod.id);
+    const progress = Math.round(((completedLessons + (quizCompleted ? 1 : 0)) / totalItems) * 100);
+    const newStatus = quizCompleted ? 'completed' : 'in_progress';
+    await updateProgress(userObj.id, mod.id, progress, newStatus);
+    return { progress, status: newStatus };
+  }
+
   // --- FIXED: REAL iframe embed, no escaped HTML ---
   function makeVideoEmbed(url) {
     if (!url) return "";
@@ -113,12 +130,17 @@
      .join('') || '<li>Coming soon</li>';
 
   // Lessons list — Navigation with forward/back buttons
-  const lessons = mod.lessons?.sort((a,b)=>a.order_index - b.order_index) || [];
   let currentLessonIndex = 0;
 
   function renderCurrentLesson() {
     const lesson = lessons[currentLessonIndex];
     if (!lesson) return '<p>No lessons yet.</p>';
+
+    const isCompleted = completedLessonIds.includes(lesson.id);
+    let completeButton = '';
+    if (!isCompleted) {
+      completeButton = `<button id="complete-lesson" class="btn">Mark Lesson as Complete</button>`;
+    }
 
     const isIntro = lesson.title.trim().toLowerCase() === "intro video";
     let content = '';
@@ -140,6 +162,7 @@
       </div>
       <div class="lesson-content" style="margin-top:1rem;">
         ${content}
+        ${completeButton}
       </div>
     `;
   }
@@ -165,6 +188,7 @@
   function attachListeners() {
     const prevBtn = document.getElementById('prev-lesson');
     const nextBtn = document.getElementById('next-lesson');
+    const completeBtn = document.getElementById('complete-lesson');
     if (prevBtn) {
       prevBtn.addEventListener('click', () => {
         if (currentLessonIndex > 0) {
@@ -183,6 +207,16 @@
         }
       });
     }
+    if (completeBtn) {
+      completeBtn.addEventListener('click', async () => {
+        const lesson = lessons[currentLessonIndex];
+        await markLessonComplete(userObj.id, lesson.id);
+        completedLessonIds.push(lesson.id);
+        await updateModuleProgress();
+        document.getElementById('lessons-container').innerHTML = renderCurrentLesson();
+        attachListeners();
+      });
+    }
   }
 
   // Attach event listeners for lesson navigation
@@ -190,10 +224,10 @@
 
   // CTA
   if (userObj) {
-    const enroll = await getOrCreateEnrollment(userObj.id, mod.id);
+    const { progress, status } = await updateModuleProgress();
     document.getElementById('cta').innerHTML = `
       <div class="card">
-        <p>Progress: ${Math.round(enroll.progress)}% • Status: ${enroll.status}</p>
+        <p>Progress: ${progress}% • Status: ${status}</p>
         <a class="btn primary" href="quiz.html?module_id=${encodeURIComponent(mod.id)}">Take Quiz</a>
       </div>`;
   } else {

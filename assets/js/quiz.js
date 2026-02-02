@@ -181,7 +181,11 @@ async function renderQuiz(moduleId) {
 
     if (passed) {
       // Complete module + issue certificate
-      await updateProgress(user.id, moduleId, 100, 'completed');
+      const lessons = await getLessonsByModuleId(moduleId);
+      const completedLessonIds = await getCompletedLessonIds(user.id, lessons.map(l => l.id));
+      const totalItems = lessons.length + 1;
+      const progress = Math.round(((completedLessonIds.length + 1) / totalItems) * 100);
+      await updateProgress(user.id, moduleId, progress, 'completed');
       const cert = await issueCertificate(user.id, moduleId, scorePct);
       const params = new URLSearchParams({
         module_id: moduleId,
@@ -194,7 +198,11 @@ async function renderQuiz(moduleId) {
       }, 500);
     } else {
       // Partial progress for failed attempt
-      await updateProgress(user.id, moduleId, Math.max(60));
+      const lessons = await getLessonsByModuleId(moduleId);
+      const completedLessonIds = await getCompletedLessonIds(user.id, lessons.map(l => l.id));
+      const totalItems = lessons.length + 1;
+      const progress = Math.round((completedLessonIds.length / totalItems) * 100);
+      await updateProgress(user.id, moduleId, progress);
       alert(`Your score: ${scorePct}%. Passing threshold is ${window.ENV.PASS_THRESHOLD}%. Review feedback and try again.`);
       // Disable submit to avoid double submissions until they change answers or retry
       submitBtn.disabled = true;
