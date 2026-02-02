@@ -68,7 +68,10 @@
       return `
         <div class="video-frame">
           <iframe
+            width="800"
+            height="450"
             src="https://www.youtube.com/embed/${id}"
+            style="display: block; margin: 0 auto;"
             allowfullscreen
           ></iframe>
         </div>`;
@@ -80,7 +83,10 @@
       return `
         <div class="video-frame">
           <iframe 
+            width="800"
+            height="450"
             src="https://player.vimeo.com/video/${vm[1]}"
+            style="display: block; margin: 0 auto;"
             allowfullscreen
           ></iframe>
         </div>`;
@@ -90,14 +96,14 @@
     if (url.toLowerCase().endsWith(".mp4")) {
       return `
         <div class="video-frame">
-          <video src="${url}" controls></video>
+          <video width="800" height="450" src="${url}" controls style="display: block; margin: 0 auto;"></video>
         </div>`;
     }
 
     // Fallback generic iframe
     return `
       <div class="video-frame">
-        <iframe src="${url}" allowfullscreen></iframe>
+        <iframe width="800" height="450" src="${url}" style="display: block; margin: 0 auto;" allowfullscreen></iframe>
       </div>`;
   }
 
