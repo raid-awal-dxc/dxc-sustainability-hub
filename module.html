@@ -7,6 +7,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <link rel="stylesheet" href="assets/css/styles.css"/>
+<link rel="stylesheet" href="assets/css/videoplayer.css"/>
 <style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/config.js"></script>
@@ -14,8 +15,7 @@
 <script src="assets/js/supabase.js"></script>
 <script src="assets/js/ui.js"></script>
 <script src="assets/js/theme.js"></script>
-
-  <script src="assets/js/data.js"></script>
+<script src="assets/js/data.js"></script>
 </head>
 <body>
   
@@ -46,20 +46,159 @@
     <div style="margin-top:1rem" id="cta"></div>
   </main>
   <script>
-    (async()=>{
-      const user=await getCurrentUser(); const a=document.getElementById('nav-auth'); if(user){ a.textContent='Sign out'; a.href='#'; a.onclick=handleLogout; }
-      const slug=new URLSearchParams(location.search).get('slug');
-      const mod=await getModuleBySlug(slug);
-      const userObj=await getCurrentUser();
-      const moduleRoot=document.getElementById('module');
-      const readingList=(mod.reading_links||[]).map(r=>`<li><a href="${r.url}" target="_blank" rel="noopener">${r.title}</a></li>`).join('')||'<li>Coming soon</li>';
-      moduleRoot.innerHTML=`<h2>${mod.title}</h2><p>${mod.description||''}</p>
-      <section class=\"card\"><h3>Lessons</h3>${mod.lessons?.length?`<ol>${mod.lessons.sort((a,b)=>a.order_index-b.order_index).map(l=>`<li style=\"margin:.4rem 0\"><strong>${l.title}</strong><br/><a href=\"${l.content_url}\" target=\"_blank\" rel=\"noopener\">Open content</a></li>`).join('')}</ol>`:'<p>No lessons yet.</p>'}</section>
-      <section class=\"card\"><h3>Curated Reading</h3><ul>${readingList}</ul></section>`;
-      if(userObj){ const enroll=await getOrCreateEnrollment(userObj.id, mod.id); document.getElementById('cta').innerHTML=`<div class=\"card\"><p>Progress: ${Math.round(enroll.progress)}% • Status: ${enroll.status}</p><a class=\"btn primary\" href=\"quiz.html?module_id=${encodeURIComponent(mod.id)}\">Take Quiz</a></div>`; }
-      else { document.getElementById('cta').innerHTML=`<div class=\"card\"><p>Sign in to track your progress and earn a certificate.</p><a class=\"btn ghost\" href=\"login.html\">Sign in</a></div>`; }
-    })();
-  </script>
+(async()=>{
+  // Navbar
+  const user = await getCurrentUser();
+  const a = document.getElementById('nav-auth');
+  if (user) { a.textContent='Sign out'; a.href='#'; a.onclick=handleLogout; }
+
+  const slug = new URLSearchParams(location.search).get('slug');
+  const mod  = await getModuleBySlug(slug);
+  const userObj = await getCurrentUser();
+  const moduleRoot = document.getElementById('module');
+
+  // --- FIXED: REAL iframe embed, no escaped HTML ---
+  function makeVideoEmbed(url) {
+    if (!url) return "";
+
+    // YouTube
+    const yt = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/i.exec(url);
+    if (yt) {
+      const id = yt[1];
+      return `
+        <div class="video-frame">
+          <iframe
+            src="https://www.youtube.com/embed/${id}"
+            allowfullscreen
+          ></iframe>
+        </div>`;
+      }
+
+    // Vimeo
+    const vm = /vimeo\.com\/(\d+)/i.exec(url);
+    if (vm) {
+      return `
+        <div class="video-frame">
+          <iframe 
+            src="https://player.vimeo.com/video/${vm[1]}"
+            allowfullscreen
+          ></iframe>
+        </div>`;
+    }
+
+    // MP4
+    if (url.toLowerCase().endsWith(".mp4")) {
+      return `
+        <div class="video-frame">
+          <video src="${url}" controls></video>
+        </div>`;
+    }
+
+    // Fallback generic iframe
+    return `
+      <div class="video-frame">
+        <iframe src="${url}" allowfullscreen></iframe>
+      </div>`;
+  }
+
+  // Curated Reading (unchanged)
+  const readingList = (mod.reading_links||[])
+     .map(r => `<li><a href="${r.url}" target="_blank" rel="noopener">${r.title}</a></li>`)
+     .join('') || '<li>Coming soon</li>';
+
+  // Lessons list — Navigation with forward/back buttons
+  const lessons = mod.lessons?.sort((a,b)=>a.order_index - b.order_index) || [];
+  let currentLessonIndex = 0;
+
+  function renderCurrentLesson() {
+    const lesson = lessons[currentLessonIndex];
+    if (!lesson) return '<p>No lessons yet.</p>';
+
+    const isIntro = lesson.title.trim().toLowerCase() === "intro video";
+    let content = '';
+
+    if (isIntro) {
+      content = makeVideoEmbed(lesson.content_url);
+    } else {
+      content = `<a href="${lesson.content_url}" target="_blank" rel="noopener">Open content</a>`;
+    }
+
+    const prevDisabled = currentLessonIndex === 0 ? 'disabled' : '';
+    const nextDisabled = currentLessonIndex === lessons.length - 1 ? 'disabled' : '';
+
+    return `
+      <div class="lesson-nav">
+        <button id="prev-lesson" ${prevDisabled} class="btn">Previous</button>
+        <span>Lesson ${currentLessonIndex + 1} of ${lessons.length}: <strong>${lesson.title}</strong></span>
+        <button id="next-lesson" ${nextDisabled} class="btn">Next</button>
+      </div>
+      <div class="lesson-content" style="margin-top:1rem;">
+        ${content}
+      </div>
+    `;
+  }
+
+  const lessonsHTML = lessons.length ? renderCurrentLesson() : '<p>No lessons yet.</p>';
+
+  // Render module
+  moduleRoot.innerHTML = `
+    <h2>${mod.title}</h2>
+    <p>${mod.description || ''}</p>
+
+    <section class="card">
+      <h3>Lessons</h3>
+      <div id="lessons-container">${lessonsHTML}</div>
+    </section>
+
+    <section class="card">
+      <h3>Curated Reading</h3>
+      <ul>${readingList}</ul>
+    </section>
+  `;
+
+  function attachListeners() {
+    const prevBtn = document.getElementById('prev-lesson');
+    const nextBtn = document.getElementById('next-lesson');
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        if (currentLessonIndex > 0) {
+          currentLessonIndex--;
+          document.getElementById('lessons-container').innerHTML = renderCurrentLesson();
+          attachListeners();
+        }
+      });
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        if (currentLessonIndex < lessons.length - 1) {
+          currentLessonIndex++;
+          document.getElementById('lessons-container').innerHTML = renderCurrentLesson();
+          attachListeners();
+        }
+      });
+    }
+  }
+
+  // Attach event listeners for lesson navigation
+  attachListeners();
+
+  // CTA
+  if (userObj) {
+    const enroll = await getOrCreateEnrollment(userObj.id, mod.id);
+    document.getElementById('cta').innerHTML = `
+      <div class="card">
+        <p>Progress: ${Math.round(enroll.progress)}% • Status: ${enroll.status}</p>
+        <a class="btn primary" href="quiz.html?module_id=${encodeURIComponent(mod.id)}">Take Quiz</a>
+      </div>`;
+  } else {
+    document.getElementById('cta').innerHTML = `
+      <div class="card">
+        <p>Sign in to track your progress and earn a certificate.</p>
+        <a class="btn ghost" href="login.html">Sign in</a>
+      </div>`;
+  }
+})();
+</script>
   <script src="assets/js/auth.js"></script>
 </body>
 </html>
