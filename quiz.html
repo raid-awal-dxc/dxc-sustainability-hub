@@ -43,12 +43,11 @@
 </nav>
 
 <main class="container">
-  <div class="quiz-wrap-head">
-    <h2>Module Quiz</h2>
-  </div>
   <div id="quiz-container"></div>
+</main>
 
-  <!-- Sticky submit bar -->
+<!-- Sticky submit bar -->
+<div class="quiz-submit-bar-container">
   <div id="quiz-submit-bar" class="quiz-submit-bar">
     <div id="quiz-progress" class="quiz-progress">Answered 0 of 0</div>
     <div class="quiz-actions">
@@ -56,7 +55,7 @@
       <button id="quiz-submit" class="btn primary" type="button" disabled>Submit Quiz</button>
     </div>
   </div>
-</main>
+</div>
   <script>
     (async()=>{ 
       const user=await getCurrentUser(); const a=document.getElementById('nav-auth'); if(user){ a.textContent='Sign out'; a.href='#'; a.onclick=handleLogout;
