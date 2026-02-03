@@ -137,7 +137,10 @@
     if (!lesson) return '<p>No lessons yet.</p>';
 
     const isCompleted = completedLessonIds.includes(lesson.id);
-    const completeCheckbox = `<label><input type="checkbox" id="complete-lesson" ${isCompleted ? 'checked' : ''}> Mark Lesson as Complete</label>`;
+    let completeButton = '';
+    if (!isCompleted) {
+      completeButton = `<button id="complete-lesson" class="btn">Mark Lesson as Complete</button>`;
+    }
 
     const isIntro = lesson.title.trim().toLowerCase() === "intro video";
     let content = '';
@@ -159,7 +162,7 @@
       </div>
       <div class="lesson-content" style="margin-top:1rem;">
         ${content}
-        <div style="margin-top:1rem;">${completeCheckbox}</div>
+        ${completeButton}
       </div>
     `;
   }
@@ -185,7 +188,7 @@
   function attachListeners() {
     const prevBtn = document.getElementById('prev-lesson');
     const nextBtn = document.getElementById('next-lesson');
-    const completeCheckbox = document.getElementById('complete-lesson');
+    const completeBtn = document.getElementById('complete-lesson');
     if (prevBtn) {
       prevBtn.addEventListener('click', () => {
         if (currentLessonIndex > 0) {
@@ -204,23 +207,12 @@
         }
       });
     }
-    if (completeCheckbox) {
-      completeCheckbox.addEventListener('change', async () => {
+    if (completeBtn) {
+      completeBtn.addEventListener('click', async () => {
         const lesson = lessons[currentLessonIndex];
-        const wasChecked = completeCheckbox.checked;
         try {
-          let success = false;
-          if (wasChecked) {
-            console.log('Marking lesson complete:', lesson.id);
-            await markLessonComplete(userObj.id, lesson.id);
-            success = true;
-          } else {
-            console.log('Marking lesson incomplete:', lesson.id);
-            success = await markLessonIncomplete(userObj.id, lesson.id);
-            if (!success) {
-              console.warn('No record found to delete for lesson:', lesson.id);
-            }
-          }
+          console.log('Marking lesson complete:', lesson.id);
+          await markLessonComplete(userObj.id, lesson.id);
           // Re-fetch completed lessons to ensure UI is in sync with database
           completedLessonIds = await getCompletedLessonIds(userObj.id, lessons.map(l => l.id));
           console.log('Refetched completedLessonIds:', completedLessonIds);
@@ -228,9 +220,7 @@
           document.getElementById('lessons-container').innerHTML = renderCurrentLesson();
           attachListeners();
         } catch (error) {
-          console.error('Error updating lesson completion:', error);
-          // Revert the checkbox state on error
-          completeCheckbox.checked = !wasChecked;
+          console.error('Error marking lesson complete:', error);
         }
       });
     }
