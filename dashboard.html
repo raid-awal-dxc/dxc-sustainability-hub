@@ -60,6 +60,7 @@
       a.href='#'; 
       a.onclick=handleLogout; 
       const enrolls=await listUserEnrollments(user.id); 
+      enrolls.sort((a,b) => (a.modules?.order_index || 0) - (b.modules?.order_index || 0)); 
       const root=document.getElementById('enrollments'); 
       root.innerHTML=enrolls.map(e=>`<article class=\"card\"><h3>${e.modules?.title||'Module'}</h3><p>Status: ${formatStatus(e.status)}</p><p>Progress: ${Math.round(e.progress)}%</p><div style=\"display:flex;gap:.5rem;flex-wrap:wrap\"><a class=\"btn ghost\" href=\"module.html?slug=${encodeURIComponent(e.modules?.slug)}\">Open</a></div></article>`).join('')||'<p class="card">No progress yet. Start with <a href="modules.html">Modules</a>.</p>'; 
     })();
