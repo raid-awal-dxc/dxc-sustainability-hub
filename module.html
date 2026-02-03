@@ -142,10 +142,10 @@
       completeButton = `<button id="complete-lesson" class="btn">Mark Lesson as Complete</button>`;
     }
 
-    const isIntro = lesson.title.trim().toLowerCase() === "intro video";
+    const isVideo = lesson.title.trim().toLowerCase().includes('video')
     let content = '';
 
-    if (isIntro) {
+    if (isVideo) {
       content = makeVideoEmbed(lesson.content_url);
     } else {
       content = `<a href="${lesson.content_url}" target="_blank" rel="noopener">Open content</a>`;
@@ -212,7 +212,8 @@
         const lesson = lessons[currentLessonIndex];
         await markLessonComplete(userObj.id, lesson.id);
         completedLessonIds.push(lesson.id);
-        await updateModuleProgress();
+        const { progress, status } = await updateModuleProgress();
+        renderCTA(progress, status);
         document.getElementById('lessons-container').innerHTML = renderCurrentLesson();
         attachListeners();
       });
@@ -222,14 +223,19 @@
   // Attach event listeners for lesson navigation
   attachListeners();
 
-  // CTA
-  if (userObj) {
-    const { progress, status } = await updateModuleProgress();
+  // Function to render CTA
+  function renderCTA(progress, status) {
     document.getElementById('cta').innerHTML = `
       <div class="card">
         <p>Progress: ${progress}% • Status: ${status}</p>
         <a class="btn primary" href="quiz.html?module_id=${encodeURIComponent(mod.id)}">Take Quiz</a>
       </div>`;
+  }
+
+  // CTA
+  if (userObj) {
+    const { progress, status } = await updateModuleProgress();
+    renderCTA(progress, status);
   } else {
     document.getElementById('cta').innerHTML = `
       <div class="card">
