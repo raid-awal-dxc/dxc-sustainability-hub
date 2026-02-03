@@ -152,13 +152,16 @@
     }
 
     const prevDisabled = currentLessonIndex === 0 ? 'disabled' : '';
-    const nextDisabled = (currentLessonIndex === lessons.length - 1 || !isCompleted) ? 'disabled' : '';
+    const isLastLesson = currentLessonIndex === lessons.length - 1;
+    const allCompleted = completedLessonIds.length === lessons.length;
+    const nextText = isLastLesson ? 'Take Quiz' : 'Next';
+    const nextDisabled = (!isCompleted || (isLastLesson && !allCompleted)) ? 'disabled' : '';
 
     return `
       <div class="lesson-nav">
         <button id="prev-lesson" ${prevDisabled} class="btn">Previous</button>
         <span>Lesson ${currentLessonIndex + 1} of ${lessons.length}: <strong>${lesson.title}</strong></span>
-        <button id="next-lesson" ${nextDisabled} class="btn">Next</button>
+        <button id="next-lesson" ${nextDisabled} class="btn">${nextText}</button>
       </div>
       <div class="lesson-content" style="margin-top:1rem;">
         ${content}
@@ -200,7 +203,10 @@
     }
     if (nextBtn) {
       nextBtn.addEventListener('click', () => {
-        if (currentLessonIndex < lessons.length - 1) {
+        if (currentLessonIndex === lessons.length - 1) {
+          // Go to quiz
+          window.location.href = `quiz.html?module_id=${encodeURIComponent(mod.id)}`;
+        } else if (currentLessonIndex < lessons.length - 1) {
           currentLessonIndex++;
           document.getElementById('lessons-container').innerHTML = renderCurrentLesson();
           attachListeners();
@@ -241,7 +247,20 @@
   // CTA
   if (userObj) {
     const { progress, status } = await updateModuleProgress();
-    renderCTA(progress, status);
+    const allLessonsCompleted = completedLessonIds.length === lessons.length;
+    if (allLessonsCompleted) {
+      document.getElementById('cta').innerHTML = `
+        <div class="card">
+          <p>Progress: ${progress}% • Status: ${status}</p>
+          <a class="btn primary" href="quiz.html?module_id=${encodeURIComponent(mod.id)}">Take Quiz</a>
+        </div>`;
+    } else {
+      document.getElementById('cta').innerHTML = `
+        <div class="card">
+          <p>Progress: ${progress}% • Status: ${status}</p>
+          <p>Complete all lessons to unlock the quiz.</p>
+        </div>`;
+    }
   } else {
     document.getElementById('cta').innerHTML = `
       <div class="card">

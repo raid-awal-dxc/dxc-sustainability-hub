@@ -46,7 +46,23 @@
     <div id="enrollments" class="grid cols-3"></div>
   </main>
   <script>
-    (async()=>{ const user=await requireAuth(); const a=document.getElementById('nav-auth'); a.textContent='Sign out'; a.href='#'; a.onclick=handleLogout; const enrolls=await listUserEnrollments(user.id); const root=document.getElementById('enrollments'); root.innerHTML=enrolls.map(e=>`<article class=\"card\"><h3>${e.modules?.title||'Module'}</h3><p>Status: ${e.status}</p><p>Progress: ${Math.round(e.progress)}%</p><div style=\"display:flex;gap:.5rem;flex-wrap:wrap\"><a class=\"btn ghost\" href=\"module.html?slug=${encodeURIComponent(e.modules?.slug)}\">Open</a><a class=\"btn primary\" href=\"quiz.html?module_id=${encodeURIComponent(e.module_id)}\">Quiz</a></div></article>`).join('')||'<p class="card">No progress yet. Start with <a href="modules.html">Modules</a>.</p>'; })();
+    (async()=>{ 
+      const formatStatus = (status) => {
+        switch(status) {
+          case 'in_progress': return 'In Progress';
+          case 'completed': return 'Completed';
+          default: return status;
+        }
+      };
+      const user=await requireAuth(); 
+      const a=document.getElementById('nav-auth'); 
+      a.textContent='Sign out'; 
+      a.href='#'; 
+      a.onclick=handleLogout; 
+      const enrolls=await listUserEnrollments(user.id); 
+      const root=document.getElementById('enrollments'); 
+      root.innerHTML=enrolls.map(e=>`<article class=\"card\"><h3>${e.modules?.title||'Module'}</h3><p>Status: ${formatStatus(e.status)}</p><p>Progress: ${Math.round(e.progress)}%</p><div style=\"display:flex;gap:.5rem;flex-wrap:wrap\"><a class=\"btn ghost\" href=\"module.html?slug=${encodeURIComponent(e.modules?.slug)}\">Open</a></div></article>`).join('')||'<p class="card">No progress yet. Start with <a href="modules.html">Modules</a>.</p>'; 
+    })();
   </script>
   <script src="assets/js/auth.js"></script>
 </body>
