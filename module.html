@@ -137,10 +137,7 @@
     if (!lesson) return '<p>No lessons yet.</p>';
 
     const isCompleted = completedLessonIds.includes(lesson.id);
-    let completeButton = '';
-    if (!isCompleted) {
-      completeButton = `<button id="complete-lesson" class="btn">Mark Lesson as Complete</button>`;
-    }
+    const completeCheckbox = `<label><input type="checkbox" id="complete-lesson" ${isCompleted ? 'checked' : ''}> Mark Lesson as Complete</label>`;
 
     const isVideo = lesson.title.trim().toLowerCase().includes('video')
     let content = '';
@@ -152,7 +149,7 @@
     }
 
     const prevDisabled = currentLessonIndex === 0 ? 'disabled' : '';
-    const nextDisabled = currentLessonIndex === lessons.length - 1 ? 'disabled' : '';
+    const nextDisabled = (currentLessonIndex === lessons.length - 1 || !isCompleted) ? 'disabled' : '';
 
     return `
       <div class="lesson-nav">
@@ -162,7 +159,7 @@
       </div>
       <div class="lesson-content" style="margin-top:1rem;">
         ${content}
-        ${completeButton}
+        <div style="margin-top:1rem;">${completeCheckbox}</div>
       </div>
     `;
   }
@@ -188,7 +185,7 @@
   function attachListeners() {
     const prevBtn = document.getElementById('prev-lesson');
     const nextBtn = document.getElementById('next-lesson');
-    const completeBtn = document.getElementById('complete-lesson');
+    const completeCheckbox = document.getElementById('complete-lesson');
     if (prevBtn) {
       prevBtn.addEventListener('click', () => {
         if (currentLessonIndex > 0) {
@@ -207,13 +204,12 @@
         }
       });
     }
-    if (completeBtn) {
-      completeBtn.addEventListener('click', async () => {
+    if (completeCheckbox) {
+      completeCheckbox.addEventListener('change', async () => {
         const lesson = lessons[currentLessonIndex];
         await markLessonComplete(userObj.id, lesson.id);
         completedLessonIds.push(lesson.id);
-        const { progress, status } = await updateModuleProgress();
-        renderCTA(progress, status);
+        await updateModuleProgress();
         document.getElementById('lessons-container').innerHTML = renderCurrentLesson();
         attachListeners();
       });

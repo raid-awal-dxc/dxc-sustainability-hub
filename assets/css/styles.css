@@ -30,7 +30,7 @@ nav a.active, nav a:hover{background:rgba(61,220,151,.12)}
 .card{background:var(--panel);border:1px solid #1e293b;border-radius:.75rem;padding:1rem}
 .btn{padding:.65rem 1rem;border:none;border-radius:.5rem;cursor:pointer}
 .btn.primary{background:linear-gradient(90deg,var(--brand),var(--brand-2));color:#052e1b;font-weight:700}
-.btn.ghost{background:transparent;border:1px solid #1e293b;color:var(--text)}
+.btn:disabled{background:#64748b;color:#94a3b8;cursor:not-allowed;opacity:0.6}
 fieldset{border:1px solid #1e293b;border-radius:.5rem;margin:1rem 0;padding:1rem}
 legend{padding:0 .4rem;color:var(--muted)}
 .option{display:flex;gap:.6rem;margin:.35rem 0}

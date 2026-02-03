@@ -12,6 +12,7 @@
 <script src="assets/js/config.js"></script>
 <script src="assets/js/config.example.js"></script>
 <script src="assets/js/supabase.js"></script>
+<script src="assets/js/data.js"></script>
 <script src="assets/js/ui.js"></script>
 <script src="assets/js/theme.js"></script>
 
@@ -48,6 +49,12 @@
       <a class="btn ghost" href="modules.html">Browse Modules</a>
       <a class="btn primary" id = "btn" href="login.html">Get Started</a>
     </div>
+    <div id="progress-container" style="margin-top:1rem;text-align:center;display:none">
+      <p>Your overall progress: <span id="progress-text">0%</span></p>
+      <div style="width:100%;max-width:300px;margin:0 auto;background:#e2e8f0;border-radius:10px;height:10px;">
+        <div id="progress-bar" style="width:0%;height:100%;background:var(--brand);border-radius:10px;transition:width 0.3s ease;"></div>
+      </div>
+    </div>
   </header>
   <main class="container">
     <section class="grid cols-3">
@@ -67,6 +74,18 @@
         a.href='#'; 
         a.onclick=handleLogout;
         btn.style.display='none';
+
+        // Calculate overall progress
+        const modules = await listModules();
+        const enrollments = await listUserEnrollments(user.id);
+        const enrollmentMap = {};
+        enrollments.forEach(e => enrollmentMap[e.module_id] = e.progress || 0);
+        const totalProgress = modules.reduce((sum, mod) => sum + (enrollmentMap[mod.id] || 0), 0);
+        const overallProgress = Math.round(totalProgress / modules.length);
+        
+        document.getElementById('progress-text').textContent = overallProgress + '%';
+        document.getElementById('progress-bar').style.width = overallProgress + '%';
+        document.getElementById('progress-container').style.display = 'block';
       } 
     })();
   </script>
