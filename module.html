@@ -1,88 +1,139 @@
-
 <!doctype html>
 <html lang="en">
-<head>
-  <title>Module • Sustainability Hub</title>
-  
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<link rel="stylesheet" href="assets/css/styles.css"/>
-<style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}</style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/config.js"></script>
-<script src="assets/js/config.example.js"></script>
-<script src="assets/js/supabase.js"></script>
-<script src="assets/js/ui.js"></script>
-<script src="assets/js/theme.js"></script>
-<script src="assets/js/data.js"></script>
-<script src="assets/js/auth.js"></script>
-</head>
-<body>
-  
-<nav class="container">
-  <div class="brand">
-    <img class="site-logo" src="assets/img/logo-dark.svg" data-logo-dark="assets/img/logo-dark.svg" data-logo-light="assets/img/logo-light.svg" alt="Sustainability Hub" width="28" height="28"/>
-    <a href="index.html">Sustainability Hub</a>
-  </div>
-  <div style="margin-left:auto;display:flex;gap:.5rem">
-    <a href="modules.html">Modules</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a id="nav-auth" href="login.html">Login</a>
-    <button class="btn ghost theme-toggle" data-theme-toggle aria-pressed="false" style="margin-left:.5rem" title="Toggle theme">
-      <span class="sr-only">Toggle theme</span>
-      <svg class="icon-sun theme-anim" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> 
-        <circle cx="12" cy="12" r="5"/>
-        <path d="M12 1v3M12 20v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M1 12h3M20 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/>
-      </svg>
-      <svg class="icon-moon theme-anim" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-      </svg>
-    </button>
-  </div>
-</nav>
+  <head>
+    <title>Module • Sustainability Hub</title>
 
-  <main class="container">
-    <div id="module"></div>
-    <div style="margin-top:1rem" id="cta"></div>
-  </main>
-  <script>
-(async()=>{
-  // Navbar
-  const user = await getCurrentUser();
-  const a = document.getElementById('nav-auth');
-  if (user) { a.textContent='Sign out'; a.href='#'; a.onclick=handleLogout; }
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <style>
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/config.example.js"></script>
+    <script src="assets/js/supabase.js"></script>
+    <script src="assets/js/ui.js"></script>
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/auth.js"></script>
+  </head>
+  <body>
+    <nav class="container">
+      <div class="brand">
+        <img
+          class="site-logo"
+          src="assets/img/logo-dark.svg"
+          data-logo-dark="assets/img/logo-dark.svg"
+          data-logo-light="assets/img/logo-light.svg"
+          alt="Sustainability Hub"
+          width="28"
+          height="28"
+        />
+        <a href="index.html">Sustainability Hub</a>
+      </div>
+      <div style="margin-left: auto; display: flex; gap: 0.5rem">
+        <a href="modules.html">Modules</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a id="nav-auth" href="login.html">Login</a>
+        <button
+          class="btn ghost theme-toggle"
+          data-theme-toggle
+          aria-pressed="false"
+          style="margin-left: 0.5rem"
+          title="Toggle theme"
+        >
+          <span class="sr-only">Toggle theme</span>
+          <svg
+            class="icon-sun theme-anim"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="5" />
+            <path
+              d="M12 1v3M12 20v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M1 12h3M20 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"
+            />
+          </svg>
+          <svg
+            class="icon-moon theme-anim"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </button>
+      </div>
+    </nav>
 
-  const slug = new URLSearchParams(location.search).get('slug');
-  const mod  = await getModuleBySlug(slug);
-  const userObj = await getCurrentUser();
-  const moduleRoot = document.getElementById('module');
+    <main class="container">
+      <div id="module"></div>
+      <div style="margin-top: 1rem" id="cta"></div>
+    </main>
+    <script>
+      (async () => {
+        // Navbar
+        const user = await getCurrentUser();
+        const a = document.getElementById("nav-auth");
+        if (user) {
+          a.textContent = "Sign out";
+          a.href = "#";
+          a.onclick = handleLogout;
+        }
 
-  const lessons = mod.lessons?.sort((a,b)=>a.order_index - b.order_index) || [];
-  let completedLessonIds = [];
-  if (userObj) {
-    completedLessonIds = await getCompletedLessonIds(userObj.id, lessons.map(l => l.id));
-  }
+        const slug = new URLSearchParams(location.search).get("slug");
+        const mod = await getModuleBySlug(slug);
+        const userObj = await getCurrentUser();
+        const moduleRoot = document.getElementById("module");
 
-  async function updateModuleProgress() {
-    const totalItems = lessons.length + 1;
-    const completedLessons = completedLessonIds.length;
-    const enroll = await getOrCreateEnrollment(userObj.id, mod.id);
-    const quizCompleted = await hasPassedQuiz(userObj.id, mod.id);
-    const progress = Math.round(((completedLessons + (quizCompleted ? 1 : 0)) / totalItems) * 100);
-    const newStatus = quizCompleted ? 'completed' : 'in_progress';
-    await updateProgress(userObj.id, mod.id, progress, newStatus);
-    return { progress, status: newStatus };
-  }
+        const lessons =
+          mod.lessons?.sort((a, b) => a.order_index - b.order_index) || [];
+        let completedLessonIds = [];
+        if (userObj) {
+          completedLessonIds = await getCompletedLessonIds(
+            userObj.id,
+            lessons.map((l) => l.id),
+          );
+        }
 
-  // --- FIXED: REAL iframe embed, no escaped HTML ---
-  function makeVideoEmbed(url) {
-    if (!url) return "";
+        async function updateModuleProgress() {
+          const totalItems = lessons.length + 1;
+          const completedLessons = completedLessonIds.length;
+          const enroll = await getOrCreateEnrollment(userObj.id, mod.id);
+          const quizCompleted = await hasPassedQuiz(userObj.id, mod.id);
+          const progress = Math.round(
+            ((completedLessons + (quizCompleted ? 1 : 0)) / totalItems) * 100,
+          );
+          const newStatus = quizCompleted ? "completed" : "in_progress";
+          await updateProgress(userObj.id, mod.id, progress, newStatus);
+          return { progress, status: newStatus };
+        }
 
-    // YouTube
-    const yt = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/i.exec(url);
-    if (yt) {
-      const id = yt[1];
-      return `
+        // --- FIXED: REAL iframe embed, no escaped HTML ---
+        function makeVideoEmbed(url) {
+          if (!url) return "";
+
+          // YouTube
+          const yt = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/i.exec(
+            url,
+          );
+          if (yt) {
+            const id = yt[1];
+            return `
         <div class="video-frame">
           <iframe
             width="800"
@@ -92,12 +143,12 @@
             allowfullscreen
           ></iframe>
         </div>`;
-      }
+          }
 
-    // Vimeo
-    const vm = /vimeo\.com\/(\d+)/i.exec(url);
-    if (vm) {
-      return `
+          // Vimeo
+          const vm = /vimeo\.com\/(\d+)/i.exec(url);
+          if (vm) {
+            return `
         <div class="video-frame">
           <iframe 
             width="800"
@@ -107,57 +158,61 @@
             allowfullscreen
           ></iframe>
         </div>`;
-    }
+          }
 
-    // MP4
-    if (url.toLowerCase().endsWith(".mp4")) {
-      return `
+          // MP4
+          if (url.toLowerCase().endsWith(".mp4")) {
+            return `
         <div class="video-frame">
           <video width="800" height="450" src="${url}" controls style="display: block; margin: 0 auto;"></video>
         </div>`;
-    }
+          }
 
-    // Fallback generic iframe
-    return `
+          // Fallback generic iframe
+          return `
       <div class="video-frame">
         <iframe width="800" height="450" src="${url}" style="display: block; margin: 0 auto;" allowfullscreen></iframe>
       </div>`;
-  }
+        }
 
-  // Curated Reading (unchanged)
-  const readingList = (mod.reading_links||[])
-     .map(r => `<li><a href="${r.url}" target="_blank" rel="noopener">${r.title}</a></li>`)
-     .join('') || '<li>Coming soon</li>';
+        // Curated Reading (unchanged)
+        const readingList =
+          (mod.reading_links || [])
+            .map(
+              (r) =>
+                `<li><a href="${r.url}" target="_blank" rel="noopener">${r.title}</a></li>`,
+            )
+            .join("") || "<li>Coming soon</li>";
 
-  // Lessons list — Navigation with forward/back buttons
-  let currentLessonIndex = 0;
+        // Lessons list — Navigation with forward/back buttons
+        let currentLessonIndex = 0;
 
-  function renderCurrentLesson() {
-    const lesson = lessons[currentLessonIndex];
-    if (!lesson) return '<p>No lessons yet.</p>';
+        function renderCurrentLesson() {
+          const lesson = lessons[currentLessonIndex];
+          if (!lesson) return "<p>No lessons yet.</p>";
 
-    const isCompleted = completedLessonIds.includes(lesson.id);
-    let completeButton = '';
-    if (!isCompleted) {
-      completeButton = `<button id="complete-lesson" class="btn">Mark Lesson as Complete</button>`;
-    }
+          const isCompleted = completedLessonIds.includes(lesson.id);
+          let completeButton = "";
+          if (!isCompleted) {
+            completeButton = `<button id="complete-lesson" class="btn">Mark Lesson as Complete</button>`;
+          }
 
-    const isVideo = lesson.title.trim().toLowerCase().includes('video')
-    let content = '';
+          // Always use embedded video player for content_url
+          let content = makeVideoEmbed(lesson.content_url);
 
-    if (isVideo) {
-      content = makeVideoEmbed(lesson.content_url);
-    } else {
-      content = `<a href="${lesson.content_url}" target="_blank" rel="noopener">Open content</a>`;
-    }
+          // Add text content below the video if available
+          if (lesson.content) {
+            content += `<div class="lesson-text" style="margin: 1rem;">${lesson.content}</div>`;
+          }
 
-    const prevDisabled = currentLessonIndex === 0 ? 'disabled' : '';
-    const isLastLesson = currentLessonIndex === lessons.length - 1;
-    const allCompleted = completedLessonIds.length === lessons.length;
-    const nextText = isLastLesson ? 'Take Quiz' : 'Next';
-    const nextDisabled = (!isCompleted || (isLastLesson && !allCompleted)) ? 'disabled' : '';
+          const prevDisabled = currentLessonIndex === 0 ? "disabled" : "";
+          const isLastLesson = currentLessonIndex === lessons.length - 1;
+          const allCompleted = completedLessonIds.length === lessons.length;
+          const nextText = isLastLesson ? "Take Quiz" : "Next";
+          const nextDisabled =
+            !isCompleted || (isLastLesson && !allCompleted) ? "disabled" : "";
 
-    return `
+          return `
       <div class="lesson-nav">
         <button id="prev-lesson" ${prevDisabled} class="btn">Previous</button>
         <span>Lesson ${currentLessonIndex + 1} of ${lessons.length}: <strong>${lesson.title}</strong></span>
@@ -168,14 +223,16 @@
         ${completeButton}
       </div>
     `;
-  }
+        }
 
-  const lessonsHTML = lessons.length ? renderCurrentLesson() : '<p>No lessons yet.</p>';
+        const lessonsHTML = lessons.length
+          ? renderCurrentLesson()
+          : "<p>No lessons yet.</p>";
 
-  // Render module
-  moduleRoot.innerHTML = `
+        // Render module
+        moduleRoot.innerHTML = `
     <h2>${mod.title}</h2>
-    <p>${mod.description || ''}</p>
+    <p>${mod.description || ""}</p>
 
     <section class="card">
       <h3>Lessons</h3>
@@ -188,87 +245,97 @@
     </section>
   `;
 
-  function attachListeners() {
-    const prevBtn = document.getElementById('prev-lesson');
-    const nextBtn = document.getElementById('next-lesson');
-    const completeBtn = document.getElementById('complete-lesson');
-    if (prevBtn) {
-      prevBtn.addEventListener('click', () => {
-        if (currentLessonIndex > 0) {
-          currentLessonIndex--;
-          document.getElementById('lessons-container').innerHTML = renderCurrentLesson();
-          attachListeners();
+        function attachListeners() {
+          const prevBtn = document.getElementById("prev-lesson");
+          const nextBtn = document.getElementById("next-lesson");
+          const completeBtn = document.getElementById("complete-lesson");
+          if (prevBtn) {
+            prevBtn.addEventListener("click", () => {
+              if (currentLessonIndex > 0) {
+                currentLessonIndex--;
+                document.getElementById("lessons-container").innerHTML =
+                  renderCurrentLesson();
+                attachListeners();
+              }
+            });
+          }
+          if (nextBtn) {
+            nextBtn.addEventListener("click", () => {
+              if (currentLessonIndex === lessons.length - 1) {
+                // Go to quiz
+                window.location.href = `quiz.html?module_id=${encodeURIComponent(mod.id)}`;
+              } else if (currentLessonIndex < lessons.length - 1) {
+                currentLessonIndex++;
+                document.getElementById("lessons-container").innerHTML =
+                  renderCurrentLesson();
+                attachListeners();
+              }
+            });
+          }
+          if (completeBtn) {
+            completeBtn.addEventListener("click", async () => {
+              const lesson = lessons[currentLessonIndex];
+              try {
+                console.log("Marking lesson complete:", lesson.id);
+                await markLessonComplete(userObj.id, lesson.id);
+                // Re-fetch completed lessons to ensure UI is in sync with database
+                completedLessonIds = await getCompletedLessonIds(
+                  userObj.id,
+                  lessons.map((l) => l.id),
+                );
+                console.log(
+                  "Refetched completedLessonIds:",
+                  completedLessonIds,
+                );
+                await updateModuleProgress();
+                document.getElementById("lessons-container").innerHTML =
+                  renderCurrentLesson();
+                attachListeners();
+              } catch (error) {
+                console.error("Error marking lesson complete:", error);
+              }
+            });
+          }
         }
-      });
-    }
-    if (nextBtn) {
-      nextBtn.addEventListener('click', () => {
-        if (currentLessonIndex === lessons.length - 1) {
-          // Go to quiz
-          window.location.href = `quiz.html?module_id=${encodeURIComponent(mod.id)}`;
-        } else if (currentLessonIndex < lessons.length - 1) {
-          currentLessonIndex++;
-          document.getElementById('lessons-container').innerHTML = renderCurrentLesson();
-          attachListeners();
-        }
-      });
-    }
-    if (completeBtn) {
-      completeBtn.addEventListener('click', async () => {
-        const lesson = lessons[currentLessonIndex];
-        try {
-          console.log('Marking lesson complete:', lesson.id);
-          await markLessonComplete(userObj.id, lesson.id);
-          // Re-fetch completed lessons to ensure UI is in sync with database
-          completedLessonIds = await getCompletedLessonIds(userObj.id, lessons.map(l => l.id));
-          console.log('Refetched completedLessonIds:', completedLessonIds);
-          await updateModuleProgress();
-          document.getElementById('lessons-container').innerHTML = renderCurrentLesson();
-          attachListeners();
-        } catch (error) {
-          console.error('Error marking lesson complete:', error);
-        }
-      });
-    }
-  }
 
-  // Attach event listeners for lesson navigation
-  attachListeners();
+        // Attach event listeners for lesson navigation
+        attachListeners();
 
-  // Function to render CTA
-  function renderCTA(progress, status) {
-    document.getElementById('cta').innerHTML = `
+        // Function to render CTA
+        function renderCTA(progress, status) {
+          document.getElementById("cta").innerHTML = `
       <div class="card">
         <p>Progress: ${progress}% • Status: ${status}</p>
         <a class="btn primary" href="quiz.html?module_id=${encodeURIComponent(mod.id)}">Take Quiz</a>
       </div>`;
-  }
+        }
 
-  // CTA
-  if (userObj) {
-    const { progress, status } = await updateModuleProgress();
-    const allLessonsCompleted = completedLessonIds.length === lessons.length;
-    if (allLessonsCompleted) {
-      document.getElementById('cta').innerHTML = `
+        // CTA
+        if (userObj) {
+          const { progress, status } = await updateModuleProgress();
+          const allLessonsCompleted =
+            completedLessonIds.length === lessons.length;
+          if (allLessonsCompleted) {
+            document.getElementById("cta").innerHTML = `
         <div class="card">
           <p>Progress: ${progress}% • Status: ${status}</p>
           <a class="btn primary" href="quiz.html?module_id=${encodeURIComponent(mod.id)}">Take Quiz</a>
         </div>`;
-    } else {
-      document.getElementById('cta').innerHTML = `
+          } else {
+            document.getElementById("cta").innerHTML = `
         <div class="card">
           <p>Progress: ${progress}% • Status: ${status}</p>
           <p>Complete all lessons to unlock the quiz.</p>
         </div>`;
-    }
-  } else {
-    document.getElementById('cta').innerHTML = `
+          }
+        } else {
+          document.getElementById("cta").innerHTML = `
       <div class="card">
         <p>Sign in to track your progress and earn a certificate.</p>
         <a class="btn ghost" href="login.html">Sign in</a>
       </div>`;
-  }
-})();
-</script>
-</body>
+        }
+      })();
+    </script>
+  </body>
 </html>
