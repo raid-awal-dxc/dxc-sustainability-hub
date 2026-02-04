@@ -191,26 +191,20 @@
           const lesson = lessons[currentLessonIndex];
           if (!lesson) return "<p>No lessons yet.</p>";
 
-          const isCompleted = completedLessonIds.includes(lesson.id);
-          let completeButton = "";
-          if (!isCompleted) {
-            completeButton = `<button id="complete-lesson" class="btn">Mark Lesson as Complete</button>`;
-          }
-
           // Always use embedded video player for content_url
           let content = makeVideoEmbed(lesson.content_url);
 
-          // Add text content below the video if available
-          if (lesson.content) {
-            content += `<div class="lesson-text" style="margin: 1rem;">${lesson.content}</div>`;
-          }
+          // Text content moved to separate Summary card
 
           const prevDisabled = currentLessonIndex === 0 ? "disabled" : "";
           const isLastLesson = currentLessonIndex === lessons.length - 1;
           const allCompleted = completedLessonIds.length === lessons.length;
           const nextText = isLastLesson ? "Take Quiz" : "Next";
           const nextDisabled =
-            !isCompleted || (isLastLesson && !allCompleted) ? "disabled" : "";
+            !completedLessonIds.includes(lesson.id) ||
+            (isLastLesson && !allCompleted)
+              ? "disabled"
+              : "";
 
           return `
       <div class="lesson-nav">
@@ -220,7 +214,6 @@
       </div>
       <div class="lesson-content" style="margin-top:1rem;">
         ${content}
-        ${completeButton}
       </div>
     `;
         }
@@ -228,6 +221,11 @@
         const lessonsHTML = lessons.length
           ? renderCurrentLesson()
           : "<p>No lessons yet.</p>";
+
+        const currentLesson = lessons[currentLessonIndex] || {};
+        const isCompleted = userObj
+          ? completedLessonIds.includes(currentLesson.id)
+          : false;
 
         // Render module
         moduleRoot.innerHTML = `
@@ -237,6 +235,11 @@
     <section class="card">
       <h3>Lessons</h3>
       <div id="lessons-container">${lessonsHTML}</div>
+    </section>
+
+    <section class="card">
+      <h3>Summary</h3>
+      <div id="summary-container">${currentLesson.content ? `<div class="lesson-text" style="margin: 1rem;">${currentLesson.content}</div>` : ""}${!isCompleted ? `<button id="complete-lesson" class="btn">Mark Lesson as Complete</button>` : ""}</div>
     </section>
 
     <section class="card">
@@ -255,6 +258,17 @@
                 currentLessonIndex--;
                 document.getElementById("lessons-container").innerHTML =
                   renderCurrentLesson();
+                const newLesson = lessons[currentLessonIndex];
+                const isCompletedNew = completedLessonIds.includes(
+                  newLesson.id,
+                );
+                document.getElementById("summary-container").innerHTML =
+                  (newLesson.content
+                    ? `<div class="lesson-text" style="margin: 1rem;">${newLesson.content}</div>`
+                    : "") +
+                  (!isCompletedNew
+                    ? `<button id="complete-lesson" class="btn">Mark Lesson as Complete</button>`
+                    : "");
                 attachListeners();
               }
             });
@@ -268,6 +282,17 @@
                 currentLessonIndex++;
                 document.getElementById("lessons-container").innerHTML =
                   renderCurrentLesson();
+                const newLesson = lessons[currentLessonIndex];
+                const isCompletedNew = completedLessonIds.includes(
+                  newLesson.id,
+                );
+                document.getElementById("summary-container").innerHTML =
+                  (newLesson.content
+                    ? `<div class="lesson-text" style="margin: 1rem;">${newLesson.content}</div>`
+                    : "") +
+                  (!isCompletedNew
+                    ? `<button id="complete-lesson" class="btn">Mark Lesson as Complete</button>`
+                    : "");
                 attachListeners();
               }
             });
@@ -290,6 +315,10 @@
                 await updateModuleProgress();
                 document.getElementById("lessons-container").innerHTML =
                   renderCurrentLesson();
+                document.getElementById("summary-container").innerHTML =
+                  lessons[currentLessonIndex].content
+                    ? `<div class="lesson-text" style="margin: 1rem;">${lessons[currentLessonIndex].content}</div>`
+                    : "";
                 attachListeners();
               } catch (error) {
                 console.error("Error marking lesson complete:", error);
