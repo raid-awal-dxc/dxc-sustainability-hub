@@ -1,12 +1,25 @@
 
-<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sustainability Hub (Light)">
+
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sustainability Hub (Custom Colours)">
   <defs>
     <linearGradient id="g" x1="0" x2="1">
-      <stop offset="0" stop-color="#16a34a"/><stop offset="1" stop-color="#22c55e"/>
+      <stop offset="0" stop-color="#4995FF"/>
+      <stop offset="1" stop-color="#FF7E51"/>
     </linearGradient>
   </defs>
-  <rect rx="48" width="256" height="256" fill="#eaf7f0"/>
+
+  <!-- Background (kept light but slightly tinted to match the palette) -->
+  <rect rx="48" width="256" height="256" fill="#f3f8ff"/>
+
+  <!-- Soft circle glow -->
   <circle cx="128" cy="128" r="72" fill="url(#g)" opacity=".2"/>
-  <path d="M128 52c35 0 64 29 64 64s-29 64-64 64S64 151 64 116" fill="none" stroke="url(#g)" stroke-width="12" stroke-linecap="round"/>
-  <path d="M64 116c38 6 64-26 64-64" fill="none" stroke="url(#g)" stroke-width="12" stroke-linecap="round"/>
+
+  <!-- Outer arc -->
+  <path d="M128 52c35 0 64 29 64 64s-29 64-64 64S64 151 64 116"
+        fill="none" stroke="url(#g)" stroke-width="12" stroke-linecap="round"/>
+
+  <!-- Inner arc -->
+  <path d="M64 116c38 6 64-26 64-64"
+        fill="none" stroke="url(#g)" stroke-width="12" stroke-linecap="round"/>
 </svg>
+
