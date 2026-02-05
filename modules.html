@@ -40,6 +40,27 @@
   </div>
 </nav>
 
+<script>
+  // Instant Supabase token check (no async)
+  const token = Object.keys(localStorage).find(k =>
+    k.includes('auth-token')
+  );
+
+  const a = document.getElementById('nav-auth');
+
+  if (token) {
+    // Logged in — show Sign out instantly
+    a.textContent = 'Sign out';
+    a.href = '#';
+    a.onclick = () => handleLogout();
+  } else {
+    // Logged out — show Login instantly
+    a.textContent = 'Login';
+    a.href = 'login.html';
+  }
+</script>
+
+
   <main class="container">
     <h2>Available Modules</h2>
     <div class="grid cols-3" id="mod-list"></div>

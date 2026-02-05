@@ -80,21 +80,26 @@
       </div>
     </nav>
 
+    <script>
+      const nav = document.getElementById('nav-auth');
+      const tokenKey = Object.keys(localStorage).find(k => k.includes('auth-token'));
+
+      if (tokenKey) {
+        nav.textContent = 'Sign out';
+        nav.href = '#';
+        nav.onclick = () => handleLogout();
+      } else {
+        nav.textContent = 'Login';
+        nav.href = 'login.html';
+      }
+    </script>
+
     <main class="container">
       <div id="module"></div>
       <div style="margin-top: 1rem" id="cta"></div>
     </main>
     <script>
       (async () => {
-        // Navbar
-        const user = await getCurrentUser();
-        const a = document.getElementById("nav-auth");
-        if (user) {
-          a.textContent = "Sign out";
-          a.href = "#";
-          a.onclick = handleLogout;
-        }
-
         const slug = new URLSearchParams(location.search).get("slug");
         const mod = await getModuleBySlug(slug);
         const userObj = await getCurrentUser();

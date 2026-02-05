@@ -41,6 +41,8 @@ label{display:block;margin:.4rem 0}
 .footer{padding:2rem 1.5rem;color:var(--muted);text-align:center;border-top:1px solid #1e293b;margin-top:2rem}
 .badge{display:inline-flex;gap:.35rem;align-items:center;padding:.25rem .5rem;border-radius:999px;background:#0a1426;border:1px solid #1e293b;color:#a7f3d0}
 
+.hidden { visibility: hidden; }
+
 /* Smooth transitions for theme change */
 html, body, nav, .card, fieldset { transition: background-color .25s ease, color .25s ease, border-color .25s ease; }
 .site-logo { transition: opacity .25s ease, filter .25s ease; }

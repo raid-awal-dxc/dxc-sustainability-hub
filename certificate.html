@@ -50,6 +50,20 @@
   </div>
 </nav>
 
+<script>
+  const nav = document.getElementById('nav-auth');
+  const tokenKey = Object.keys(localStorage).find(k => k.includes('auth-token'));
+
+  if (tokenKey) {
+    nav.textContent = 'Sign out';
+    nav.href = '#';
+    nav.onclick = () => handleLogout();
+  } else {
+    nav.textContent = 'Login';
+    nav.href = 'login.html';
+  }
+</script>
+
   <main class="container">
     <section id="certificate" class="card">
       <h1>Certificate of Completion</h1>

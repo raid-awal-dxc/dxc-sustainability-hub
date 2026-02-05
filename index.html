@@ -27,7 +27,7 @@
   <div style="margin-left:auto;display:flex;gap:.5rem">
     <a href="modules.html">Modules</a>
     <a href="dashboard.html">Dashboard</a>
-    <a id="nav-auth" href="login.html">Login</a>
+    <a id="nav-auth" class="hidden" href="login.html">Login</a>
     <button class="btn ghost theme-toggle" data-theme-toggle aria-pressed="false" style="margin-left:.5rem" title="Toggle theme">
       <span class="sr-only">Toggle theme</span>
       <svg class="icon-sun theme-anim" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> 
@@ -64,31 +64,30 @@
     </section>
   </main>
   <footer class="footer"><p>© <span id="y"></span> Sustainability Hub.</p></footer>
-  <script>
-    document.getElementById('y').textContent=new Date().getFullYear();
-    (async()=>{ const user=await getCurrentUser(); 
-      const btn = document.getElementById("btn");
-      const a=document.getElementById('nav-auth'); 
-      if(user){
-        a.textContent='Sign out'; 
-        a.href='#'; 
-        a.onclick=handleLogout;
-        btn.style.display='none';
+  
+<script>
+  // Get Supabase token from localStorage (instant, no async)
+  const token = Object.keys(localStorage).find(k =>
+    k.includes('auth-token')
+  );
 
-        // Calculate overall progress
-        const modules = await listModules();
-        const enrollments = await listUserEnrollments(user.id);
-        const enrollmentMap = {};
-        enrollments.forEach(e => enrollmentMap[e.module_id] = e.progress || 0);
-        const totalProgress = modules.reduce((sum, mod) => sum + (enrollmentMap[mod.id] || 0), 0);
-        const overallProgress = Math.round(totalProgress / modules.length);
-        
-        document.getElementById('progress-text').textContent = overallProgress + '%';
-        document.getElementById('progress-bar').style.width = overallProgress + '%';
-        document.getElementById('progress-container').style.display = 'block';
-      } 
-    })();
-  </script>
+  const a = document.getElementById('nav-auth');
+
+  if (token) {
+    // User appears logged in — show sign out immediately
+    a.textContent = 'Sign out';
+    a.href = '#';
+    a.onclick = () => handleLogout();
+  } else {
+    // User appears logged out — show login immediately
+    a.textContent = 'Login';
+    a.href = 'login.html';
+  }
+
+  // Now safely show the element with no flicker
+  a.classList.remove('hidden');
+</script>
+
   <script src="assets/js/auth.js"></script>
 </body>
 </html>
