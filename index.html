@@ -1,95 +1,222 @@
-
 <!doctype html>
 <html lang="en">
-<head>
-  <title>Sustainability Hub — Learn · Act · Measure</title>
-  
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<link rel="stylesheet" href="assets/css/styles.css"/>
-<style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}</style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/config.js"></script>
-<script src="assets/js/config.example.js"></script>
-<script src="assets/js/supabase.js"></script>
-<script src="assets/js/data.js"></script>
-<script src="assets/js/ui.js"></script>
-<script src="assets/js/theme.js"></script>
+  <head>
+    <title>Sustainability Hub — Learn · Act · Measure</title>
 
-</head>
-<body>
-  
-<nav class="container">
-  <div class="brand">
-    <img class="site-logo" src="assets/img/DXC-Full-Color.svg" data-logo-dark="assets/img/DXC-Full-Color.svg" data-logo-light="assets/img/DXC-Full-Color.svg" alt="DXC" width="80" height="28"/>
-    <img class="site-logo" src="assets/img/logo-dark.svg" data-logo-dark="assets/img/logo-dark.svg" data-logo-light="assets/img/logo-light.svg" alt="Sustainability Hub" width="28" height="28"/>
-    <a href="index.html">Sustainability Hub</a>
-  </div>
-  <div style="margin-left:auto;display:flex;gap:.5rem">
-    <a href="modules.html">Modules</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a id="nav-auth" class="hidden" href="login.html">Login</a>
-    <button class="btn ghost theme-toggle" data-theme-toggle aria-pressed="false" style="margin-left:.5rem" title="Toggle theme">
-      <span class="sr-only">Toggle theme</span>
-      <svg class="icon-sun theme-anim" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> 
-        <circle cx="12" cy="12" r="5"/>
-        <path d="M12 1v3M12 20v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M1 12h3M20 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/>
-      </svg>
-      <svg class="icon-moon theme-anim" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-      </svg>
-    </button>
-  </div>
-</nav>
-
-  <header class="hero container">
-    <span class="badge">ESG • Net Zero • Circularity</span>
-    <h1>Engaging sustainability training for modern organisations</h1>
-    <p>Video modules, curated reading, interactive quizzes, and verifiable completion certificates — all in one place.</p>
-    <div style="margin-top:1rem;display:flex;gap:.6rem;justify-content:center">
-      <a class="btn ghost" href="modules.html">Browse Modules</a>
-      <a class="btn primary" id = "btn" href="login.html">Get Started</a>
-    </div>
-    <div id="progress-container" style="margin-top:1rem;text-align:center;display:none">
-      <p>Your overall progress: <span id="progress-text">0%</span></p>
-      <div style="width:100%;max-width:300px;margin:0 auto;background:#e2e8f0;border-radius:10px;height:10px;">
-        <div id="progress-bar" style="width:0%;height:100%;background:var(--brand);border-radius:10px;transition:width 0.3s ease;"></div>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <style>
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/config.example.js"></script>
+    <script src="assets/js/supabase.js"></script>
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/ui.js"></script>
+    <script src="assets/js/theme.js"></script>
+  </head>
+  <body>
+    <nav class="container">
+      <div class="brand">
+        <img
+          class="site-logo"
+          src="assets/img/DXC-Full-Color.svg"
+          data-logo-dark="assets/img/DXC-Full-Color.svg"
+          data-logo-light="assets/img/DXC-Full-Color.svg"
+          alt="DXC"
+          width="80"
+          height="28"
+        />
+        <img
+          class="site-logo"
+          src="assets/img/logo-dark.svg"
+          data-logo-dark="assets/img/logo-dark.svg"
+          data-logo-light="assets/img/logo-light.svg"
+          alt="Sustainability Hub"
+          width="28"
+          height="28"
+        />
+        <a href="index.html">Sustainability Hub</a>
       </div>
-    </div>
-  </header>
-  <main class="container">
-    <section class="grid cols-3">
-      <article class="card"><h3>Practical & Actionable</h3><p>Short videos, hands-on tasks, and tools you can apply immediately within your organisation.</p></article>
-      <article class="card"><h3>Track Progress</h3><p>See what you’ve started, completed, and how you scored on quizzes.</p></article>
-      <article class="card"><h3>Certificates</h3><p>Downloadable certificate upon passing quizzes, with a unique verification code.</p></article>
-    </section>
-  </main>
-  <footer class="footer"><p>© <span id="y"></span> Sustainability Hub.</p></footer>
-  
-<script>
-  // Get Supabase token from localStorage (instant, no async)
-  const token = Object.keys(localStorage).find(k =>
-    k.includes('auth-token')
-  );
+      <div style="margin-left: auto; display: flex; gap: 0.5rem">
+        <a href="modules.html">Modules</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a id="nav-auth" class="hidden" href="login.html">Login</a>
+        <button
+          class="btn ghost theme-toggle"
+          data-theme-toggle
+          aria-pressed="false"
+          style="margin-left: 0.5rem"
+          title="Toggle theme"
+        >
+          <span class="sr-only">Toggle theme</span>
+          <svg
+            class="icon-sun theme-anim"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="5" />
+            <path
+              d="M12 1v3M12 20v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M1 12h3M20 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"
+            />
+          </svg>
+          <svg
+            class="icon-moon theme-anim"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </button>
+      </div>
+    </nav>
 
-  const a = document.getElementById('nav-auth');
+    <header class="hero container">
+      <span class="badge">ESG • Net Zero • Circularity</span>
+      <h1>Engaging sustainability training for modern organisations</h1>
+      <p>
+        Video modules, curated reading, interactive quizzes, and verifiable
+        completion certificates — all in one place.
+      </p>
+      <div
+        style="
+          margin-top: 1rem;
+          display: flex;
+          gap: 0.6rem;
+          justify-content: center;
+        "
+      >
+        <a class="btn ghost" href="modules.html">Browse Modules</a>
+        <a class="btn primary" id="btn" href="login.html">Get Started</a>
+      </div>
+      <div
+        id="progress-container"
+        style="margin-top: 1rem; text-align: center; display: none"
+      >
+        <p>Your overall progress: <span id="progress-text">0%</span></p>
+        <div
+          style="
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+            background: #e2e8f0;
+            border-radius: 10px;
+            height: 10px;
+          "
+        >
+          <div
+            id="progress-bar"
+            style="
+              width: 0%;
+              height: 100%;
+              background: var(--brand);
+              border-radius: 10px;
+              transition: width 0.3s ease;
+            "
+          ></div>
+        </div>
+      </div>
+    </header>
+    <main class="container">
+      <section class="grid cols-3">
+        <article class="card">
+          <h3>Practical & Actionable</h3>
+          <p>
+            Short videos, hands-on tasks, and tools you can apply immediately
+            within your organisation.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Track Progress</h3>
+          <p>
+            See what you’ve started, completed, and how you scored on quizzes.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Certificates</h3>
+          <p>
+            Downloadable certificate upon passing quizzes, with a unique
+            verification code.
+          </p>
+        </article>
+      </section>
+    </main>
+    <footer class="footer">
+      <p>© <span id="y"></span> Sustainability Hub.</p>
+    </footer>
 
-  if (token) {
-    // User appears logged in — show sign out immediately
-    a.textContent = 'Sign out';
-    a.href = '#';
-    a.onclick = () => handleLogout();
-    btn.style.display = 'none'; // Hide "Get Started" button when logged in
-  } else {
-    // User appears logged out — show login immediately
-    a.textContent = 'Login';
-    a.href = 'login.html';
-  }
+    <script>
+      // Get Supabase token from localStorage (instant, no async)
+      const token = Object.keys(localStorage).find((k) =>
+        k.includes("auth-token"),
+      );
 
-  // Now safely show the element with no flicker
-  a.classList.remove('hidden');
-</script>
+      const a = document.getElementById("nav-auth");
 
-  <script src="assets/js/auth.js"></script>
-</body>
+      if (token) {
+        // User appears logged in — show sign out immediately
+        a.textContent = "Sign out";
+        a.href = "#";
+        a.onclick = () => handleLogout();
+        btn.style.display = "none"; // Hide "Get Started" button when logged in
+
+        // Show progress container and load progress
+        document.getElementById("progress-container").style.display = "block";
+        loadProgressOnIndex();
+      } else {
+        // User appears logged out — show login immediately
+        a.textContent = "Login";
+        a.href = "login.html";
+      }
+
+      // Now safely show the element with no flicker
+      a.classList.remove("hidden");
+
+      // Function to load and display user progress
+      async function loadProgressOnIndex() {
+        try {
+          const user = await getCurrentUser();
+          if (!user) return;
+
+          const enrollments = await listUserEnrollments(user.id);
+          if (enrollments.length === 0) return;
+
+          // Calculate total progress across all modules
+          const totalProgress =
+            enrollments.length > 0
+              ? Math.round(
+                  enrollments.reduce((sum, e) => sum + e.progress, 0) /
+                    enrollments.length,
+                )
+              : 0;
+
+          document.getElementById("progress-text").textContent =
+            totalProgress + "%";
+          document.getElementById("progress-bar").style.width =
+            totalProgress + "%";
+        } catch (error) {
+          console.error("Error loading progress:", error);
+        }
+      }
+    </script>
+
+    <script src="assets/js/auth.js"></script>
+  </body>
 </html>
