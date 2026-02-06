@@ -79,6 +79,7 @@
     a.textContent = 'Sign out';
     a.href = '#';
     a.onclick = () => handleLogout();
+    btn.style.display = 'none'; // Hide "Get Started" button when logged in
   } else {
     // User appears logged out — show login immediately
     a.textContent = 'Login';
