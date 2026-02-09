@@ -1,91 +1,176 @@
-
 <!doctype html>
 <html lang="en">
-<head>
-  <title>Dashboard • Sustainability Hub</title>
-  
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<link rel="stylesheet" href="assets/css/styles.css"/>
-<style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}</style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/config.js"></script>
-<script src="assets/js/config.example.js"></script>
-<script src="assets/js/supabase.js"></script>
-<script src="assets/js/ui.js"></script>
-<script src="assets/js/theme.js"></script>
+  <head>
+    <title>Dashboard • Sustainability Hub</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <style>
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+      }
+      .card {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        min-height: 300px;
+      }
+      .card p:last-of-type {
+        flex-grow: 1;
+        margin-bottom: 1rem;
+      }
+      .card a {
+        align-self: flex-start;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/config.example.js"></script>
+    <script src="assets/js/supabase.js"></script>
+    <script src="assets/js/ui.js"></script>
+    <script src="assets/js/theme.js"></script>
 
-  <script src="assets/js/data.js"></script>
-</head>
-<body>
-  
-<nav class="container">
-  <div class="brand">
-    <img class="site-logo" src="assets/img/DXC-Full-Color.svg" data-logo-dark="assets/img/DXC-Full-Color.svg" data-logo-light="assets/img/DXC-Full-Color.svg" alt="DXC" width="80" height="28"/>
-    <img class="site-logo" src="assets/img/logo-dark.svg" data-logo-dark="assets/img/logo-dark.svg" data-logo-light="assets/img/logo-light.svg" alt="Sustainability Hub" width="28" height="28"/>
-    <a href="index.html">Sustainability Hub</a>
-  </div>
-  <div style="margin-left:auto;display:flex;gap:.5rem">
-    <a href="modules.html">Modules</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a id="nav-auth" href="login.html">Login</a>
-    <button class="btn ghost theme-toggle" data-theme-toggle aria-pressed="false" style="margin-left:.5rem" title="Toggle theme">
-      <span class="sr-only">Toggle theme</span>
-      <svg class="icon-sun theme-anim" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> 
-        <circle cx="12" cy="12" r="5"/>
-        <path d="M12 1v3M12 20v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M1 12h3M20 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/>
-      </svg>
-      <svg class="icon-moon theme-anim" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-      </svg>
-    </button>
-  </div>
-</nav>
+    <script src="assets/js/data.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  </head>
+  <body>
+    <nav class="container">
+      <div class="brand">
+        <img
+          class="site-logo"
+          src="assets/img/DXC-Full-Color.svg"
+          data-logo-dark="assets/img/DXC-Full-Color.svg"
+          data-logo-light="assets/img/DXC-Full-Color.svg"
+          alt="DXC"
+          width="80"
+          height="28"
+        />
+        <img
+          class="site-logo"
+          src="assets/img/logo-dark.svg"
+          data-logo-dark="assets/img/logo-dark.svg"
+          data-logo-light="assets/img/logo-light.svg"
+          alt="Sustainability Hub"
+          width="28"
+          height="28"
+        />
+        <a href="index.html">Sustainability Hub</a>
+      </div>
+      <div style="margin-left: auto; display: flex; gap: 0.5rem">
+        <a href="modules.html">Modules</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a id="nav-auth" href="login.html">Login</a>
+        <button
+          class="btn ghost theme-toggle"
+          data-theme-toggle
+          aria-pressed="false"
+          style="margin-left: 0.5rem"
+          title="Toggle theme"
+        >
+          <span class="sr-only">Toggle theme</span>
+          <svg
+            class="icon-sun theme-anim"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="5" />
+            <path
+              d="M12 1v3M12 20v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M1 12h3M20 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"
+            />
+          </svg>
+          <svg
+            class="icon-moon theme-anim"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </button>
+      </div>
+    </nav>
 
-<script>
-  // Instant Supabase token check
-  const token = Object.keys(localStorage).find(k =>
-    k.includes('auth-token')
-  );
+    <script>
+      // Instant Supabase token check
+      const token = Object.keys(localStorage).find((k) =>
+        k.includes("auth-token"),
+      );
 
-  const a = document.getElementById('nav-auth');
+      const a = document.getElementById("nav-auth");
 
-  if (token) {
-    // Show sign-out *instantly*
-    a.textContent = 'Sign out';
-    a.href = '#';
-    a.onclick = () => handleLogout();
-  } else {
-    // If no session token exists, user is definitely not logged in
-    // redirect immediately before UI loads
-    window.location.href = 'login.html';
-  }
-</script>
+      if (token) {
+        // Show sign-out *instantly*
+        a.textContent = "Sign out";
+        a.href = "#";
+        a.onclick = () => handleLogout();
+      } else {
+        // If no session token exists, user is definitely not logged in
+        // redirect immediately before UI loads
+        window.location.href = "login.html";
+      }
+    </script>
 
-  <main class="container">
-    <h2>Your Learning</h2>
-    <div id="enrollments" class="grid cols-3"></div>
-  </main>
-  <script>
-    (async()=>{ 
-      const formatStatus = (status) => {
-        switch(status) {
-          case 'in_progress': return 'In Progress';
-          case 'completed': return 'Completed';
-          default: return status;
-        }
-      };
-      const user=await requireAuth(); 
-      const a=document.getElementById('nav-auth'); 
-      a.textContent='Sign out'; 
-      a.href='#'; 
-      a.onclick=handleLogout; 
-      const enrolls=await listUserEnrollments(user.id); 
-      enrolls.sort((a,b) => (a.modules?.order_index || 0) - (b.modules?.order_index || 0)); 
-      const root=document.getElementById('enrollments'); 
-      root.innerHTML=enrolls.map(e=>`<article class=\"card\"><h3>${e.modules?.title||'Module'}</h3><p>Status: ${formatStatus(e.status)}</p><p>Progress: ${Math.round(e.progress)}%</p><div style=\"display:flex;gap:.5rem;flex-wrap:wrap\"><a class=\"btn ghost\" href=\"module.html?slug=${encodeURIComponent(e.modules?.slug)}\">Open</a></div></article>`).join('')||'<p class="card">No progress yet. Start with <a href="modules.html">Modules</a>.</p>'; 
-    })();
-  </script>
-  <script src="assets/js/auth.js"></script>
-</body>
+    <main class="container">
+      <h2>Your Learning</h2>
+      <div id="enrollments" class="grid cols-3"></div>
+    </main>
+    <script>
+      (async () => {
+        const formatStatus = (status) => {
+          switch (status) {
+            case "in_progress":
+              return "In Progress";
+            case "completed":
+              return "Completed";
+            default:
+              return status;
+          }
+        };
+        const user = await requireAuth();
+        const a = document.getElementById("nav-auth");
+        a.textContent = "Sign out";
+        a.href = "#";
+        a.onclick = handleLogout;
+        const enrolls = await listUserEnrollments(user.id);
+        enrolls.sort(
+          (a, b) =>
+            (a.modules?.order_index || 0) - (b.modules?.order_index || 0),
+        );
+
+        // Fetch certificates for the user
+        const certs = await getUserCertificates(user.id);
+        const certsByModuleId = {};
+        certs.forEach((c) => {
+          certsByModuleId[c.module_id] = c;
+        });
+
+        const root = document.getElementById("enrollments");
+        root.innerHTML =
+          enrolls
+            .map((e) => {
+              const cert = certsByModuleId[e.modules?.id];
+              const certButton = cert
+                ? `<a class=\"btn primary\" href=\"certificate.html?module_id=${e.modules?.id}&code=${cert.certificate_code}&score=${cert.score}\">Download Certificate</a>`
+                : "";
+              return `<article class=\"card\"><h3>${e.modules?.title || "Module"}</h3><p>Status: ${formatStatus(e.status)}</p><p>Progress: ${Math.round(e.progress)}%</p><div style=\"display:flex;gap:.5rem;flex-wrap:wrap\"><a class=\"btn ghost\" href=\"module.html?slug=${encodeURIComponent(e.modules?.slug)}\">Open</a>${certButton}</div></article>`;
+            })
+            .join("") ||
+          '<p class="card">No progress yet. Start with <a href="modules.html">Modules</a>.</p>';
+      })();
+    </script>
+    <script src="assets/js/auth.js"></script>
+  </body>
 </html>

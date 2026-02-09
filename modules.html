@@ -1,79 +1,149 @@
-
 <!doctype html>
 <html lang="en">
-<head>
-  <title>Modules • Sustainability Hub</title>
-  
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<link rel="stylesheet" href="assets/css/styles.css"/>
-<style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}</style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/config.js"></script>
-<script src="assets/js/config.example.js"></script>
-<script src="assets/js/supabase.js"></script>
-<script src="assets/js/ui.js"></script>
-<script src="assets/js/theme.js"></script>
-<script src="assets/js/data.js"></script>
-</head>
-<body>
-  
-<nav class="container">
-  <div class="brand">
-    <img class="site-logo" src="assets/img/DXC-Full-Color.svg" data-logo-dark="assets/img/DXC-Full-Color.svg" data-logo-light="assets/img/DXC-Full-Color.svg" alt="DXC" width="80" height="28"/>
-    <img class="site-logo" src="assets/img/logo-dark.svg" data-logo-dark="assets/img/logo-dark.svg" data-logo-light="assets/img/logo-light.svg" alt="Sustainability Hub" width="28" height="28"/>
-    <a href="index.html">Sustainability Hub</a>
-  </div>
-  <div style="margin-left:auto;display:flex;gap:.5rem">
-    <a href="modules.html">Modules</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a id="nav-auth" href="login.html">Login</a>
-    <button class="btn ghost theme-toggle" data-theme-toggle aria-pressed="false" style="margin-left:.5rem" title="Toggle theme">
-      <span class="sr-only">Toggle theme</span>
-      <svg class="icon-sun theme-anim" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> 
-        <circle cx="12" cy="12" r="5"/>
-        <path d="M12 1v3M12 20v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M1 12h3M20 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/>
-      </svg>
-      <svg class="icon-moon theme-anim" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-      </svg>
-    </button>
-  </div>
-</nav>
+  <head>
+    <title>Modules • Sustainability Hub</title>
 
-<script>
-  // Instant Supabase token check (no async)
-  const token = Object.keys(localStorage).find(k =>
-    k.includes('auth-token')
-  );
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <style>
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+      }
+      .card {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        min-height: 300px;
+      }
+      .card p:last-of-type {
+        flex-grow: 1;
+        margin-bottom: 1rem;
+      }
+      .card a {
+        align-self: flex-start;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/config.example.js"></script>
+    <script src="assets/js/supabase.js"></script>
+    <script src="assets/js/ui.js"></script>
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/js/data.js"></script>
+  </head>
+  <body>
+    <nav class="container">
+      <div class="brand">
+        <img
+          class="site-logo"
+          src="assets/img/DXC-Full-Color.svg"
+          data-logo-dark="assets/img/DXC-Full-Color.svg"
+          data-logo-light="assets/img/DXC-Full-Color.svg"
+          alt="DXC"
+          width="80"
+          height="28"
+        />
+        <img
+          class="site-logo"
+          src="assets/img/logo-dark.svg"
+          data-logo-dark="assets/img/logo-dark.svg"
+          data-logo-light="assets/img/logo-light.svg"
+          alt="Sustainability Hub"
+          width="28"
+          height="28"
+        />
+        <a href="index.html">Sustainability Hub</a>
+      </div>
+      <div style="margin-left: auto; display: flex; gap: 0.5rem">
+        <a href="modules.html">Modules</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a id="nav-auth" href="login.html">Login</a>
+        <button
+          class="btn ghost theme-toggle"
+          data-theme-toggle
+          aria-pressed="false"
+          style="margin-left: 0.5rem"
+          title="Toggle theme"
+        >
+          <span class="sr-only">Toggle theme</span>
+          <svg
+            class="icon-sun theme-anim"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="5" />
+            <path
+              d="M12 1v3M12 20v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M1 12h3M20 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"
+            />
+          </svg>
+          <svg
+            class="icon-moon theme-anim"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </button>
+      </div>
+    </nav>
 
-  const a = document.getElementById('nav-auth');
+    <script>
+      // Instant Supabase token check (no async)
+      const token = Object.keys(localStorage).find((k) =>
+        k.includes("auth-token"),
+      );
 
-  if (token) {
-    // Logged in — show Sign out instantly
-    a.textContent = 'Sign out';
-    a.href = '#';
-    a.onclick = () => handleLogout();
-  } else {
-    // Logged out — show Login instantly
-    a.textContent = 'Login';
-    a.href = 'login.html';
-  }
-</script>
+      const a = document.getElementById("nav-auth");
 
+      if (token) {
+        // Logged in — show Sign out instantly
+        a.textContent = "Sign out";
+        a.href = "#";
+        a.onclick = () => handleLogout();
+      } else {
+        // Logged out — show Login instantly
+        a.textContent = "Login";
+        a.href = "login.html";
+      }
+    </script>
 
-  <main class="container">
-    <h2>Available Modules</h2>
-    <div class="grid cols-3" id="mod-list"></div>
-  </main>
-  <script>
-    (async()=>{
-      const user=await getCurrentUser(); const a=document.getElementById('nav-auth'); if(user){ a.textContent='Sign out'; a.href='#'; a.onclick=handleLogout; }
-      const modules=await listModules();
-      const root=document.getElementById('mod-list');
-      root.innerHTML=modules.map(m=>`<article class=\"card\"><h3>${m.title}</h3><p>${m.description||''}</p><p><small>Duration: ${m.duration||'—'} • Level: ${m.level||'All'}</small></p><a class=\"btn primary\" href=\"module.html?slug=${encodeURIComponent(m.slug)}\">Open Module</a></article>`).join('');
-    })();
-  </script>
-  <script src="assets/js/auth.js"></script>
-</body>
+    <main class="container">
+      <h2>Available Modules</h2>
+      <div class="grid cols-3" id="mod-list"></div>
+    </main>
+    <script>
+      (async () => {
+        const user = await getCurrentUser();
+        const a = document.getElementById("nav-auth");
+        if (user) {
+          a.textContent = "Sign out";
+          a.href = "#";
+          a.onclick = handleLogout;
+        }
+        const modules = await listModules();
+        const root = document.getElementById("mod-list");
+        root.innerHTML = modules
+          .map(
+            (m) =>
+              `<article class=\"card\"><h3>${m.title}</h3><p>${m.description || ""}</p><p><small>Duration: ${m.duration || "—"} • Level: ${m.level || "All"}</small></p><a class=\"btn primary\" href=\"module.html?slug=${encodeURIComponent(m.slug)}\">Open Module</a></article>`,
+          )
+          .join("");
+      })();
+    </script>
+    <script src="assets/js/auth.js"></script>
+  </body>
 </html>
