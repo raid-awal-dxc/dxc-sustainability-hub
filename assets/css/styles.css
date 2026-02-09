@@ -53,6 +53,13 @@ html, body, nav, .card, fieldset { transition: background-color .25s ease, color
 :root[data-theme='light'] .icon-sun { opacity:1; transform: scale(1) rotate(0deg); }
 :root[data-theme='light'] .icon-moon { opacity:0; transform: scale(.8) rotate(90deg); }
 
+:root[data-theme='dark'] #certificate,
+:root[data-theme='dark'] #certificate * {
+  background: #fff !important;
+  color: #222 !important;
+  border-color: #ddd !important;
+}
+
 /* Quiz styles */
 .quiz-wrap-head {
   margin-bottom: 2rem;
@@ -181,5 +188,19 @@ html, body, nav, .card, fieldset { transition: background-color .25s ease, color
 
 .btn.ghost:hover {
   background: rgba(61, 220, 151, 0.1);
+}
+
+
+#certificate {
+  background: #fff !important;
+  color: #222 !important;
+}
+
+#certificate h1,
+#certificate h2,
+#certificate h3,
+#certificate p,
+#certificate strong {
+  color: #222 !important;
 }
 
