@@ -38,6 +38,8 @@
     <script src="assets/js/theme.js"></script>
 
     <script src="assets/js/data.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
   </head>
   <body>
     <nav class="container">
@@ -147,13 +149,24 @@
           (a, b) =>
             (a.modules?.order_index || 0) - (b.modules?.order_index || 0),
         );
+
+        // Fetch certificates for the user
+        const certs = await getUserCertificates(user.id);
+        const certsByModuleId = {};
+        certs.forEach((c) => {
+          certsByModuleId[c.module_id] = c;
+        });
+
         const root = document.getElementById("enrollments");
         root.innerHTML =
           enrolls
-            .map(
-              (e) =>
-                `<article class=\"card\"><h3>${e.modules?.title || "Module"}</h3><p>Status: ${formatStatus(e.status)}</p><p>Progress: ${Math.round(e.progress)}%</p><div style=\"display:flex;gap:.5rem;flex-wrap:wrap\"><a class=\"btn ghost\" href=\"module.html?slug=${encodeURIComponent(e.modules?.slug)}\">Open</a></div></article>`,
-            )
+            .map((e) => {
+              const cert = certsByModuleId[e.modules?.id];
+              const certButton = cert
+                ? `<a class=\"btn primary\" href=\"certificate.html?module_id=${e.modules?.id}&code=${cert.certificate_code}&score=${cert.score}\">Download Certificate</a>`
+                : "";
+              return `<article class=\"card\"><h3>${e.modules?.title || "Module"}</h3><p>Status: ${formatStatus(e.status)}</p><p>Progress: ${Math.round(e.progress)}%</p><div style=\"display:flex;gap:.5rem;flex-wrap:wrap\"><a class=\"btn ghost\" href=\"module.html?slug=${encodeURIComponent(e.modules?.slug)}\">Open</a>${certButton}</div></article>`;
+            })
             .join("") ||
           '<p class="card">No progress yet. Start with <a href="modules.html">Modules</a>.</p>';
       })();
