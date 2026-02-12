@@ -25,6 +25,11 @@
   }
 }
 
+:root[data-theme="dark"] .hero {
+  background-image: url("../img/forest-hero-dark.png");
+}
+
+
 :root {
   --bg: #0f172a;
   --panel: #0b1220;
@@ -94,6 +99,9 @@ nav a:hover {
   padding: 4rem 1.5rem;
   text-align: center;
   background: linear-gradient(160deg, rgba(61, 220, 151, 0.15), transparent);
+  background-image: url("../img/forest-hero.png");
+  background-size: cover;
+  background-position: center;
 }
 .hero h1 {
   font-size: 2.2rem;
