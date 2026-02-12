@@ -82,6 +82,7 @@
     </nav>
 
     <script>
+      
       const nav = document.getElementById('nav-auth');
       const tokenKey = Object.keys(localStorage).find(k => k.includes('auth-token'));
 
@@ -100,6 +101,14 @@
       <div style="margin-top: 1rem" id="cta"></div>
     </main>
     <script>
+      
+      function formatStatus(status) {
+        if (!status) return "";
+        if (status === "in_progress") return "In Progress";
+        if (status === "completed") return "Completed";
+        return status;
+      }
+
       (async () => {
         const slug = new URLSearchParams(location.search).get("slug");
         const mod = await getModuleBySlug(slug);
@@ -340,7 +349,7 @@
         function renderCTA(progress, status) {
           document.getElementById("cta").innerHTML = `
       <div class="card">
-        <p>Progress: ${progress}% • Status: ${status}</p>
+        <p>Progress: ${progress}% • Status: ${formatStatus(status)}</p>
         <a class="btn primary" href="quiz.html?module_id=${encodeURIComponent(mod.id)}">Take Quiz</a>
       </div>`;
         }
@@ -353,13 +362,13 @@
           if (allLessonsCompleted) {
             document.getElementById("cta").innerHTML = `
         <div class="card">
-          <p>Progress: ${progress}% • Status: ${status}</p>
+          <p>Progress: ${progress}% • Status: ${formatStatus(status)}</p>
           <a class="btn primary" href="quiz.html?module_id=${encodeURIComponent(mod.id)}">Take Quiz</a>
         </div>`;
           } else {
             document.getElementById("cta").innerHTML = `
         <div class="card">
-          <p>Progress: ${progress}% • Status: ${status}</p>
+          <p>Progress: ${progress}% • Status: ${formatStatus(status)}</p>
           <p>Complete all lessons to unlock the quiz.</p>
         </div>`;
           }
