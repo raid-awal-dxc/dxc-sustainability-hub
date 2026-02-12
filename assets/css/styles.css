@@ -491,3 +491,23 @@ fieldset {
 .form-group input::placeholder {
   color: var(--muted);
 }
+
+
+#certificate {
+  flex-direction: column;
+}
+
+
+.cert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* keeps text vertically aligned with the logo */
+}
+
+.cert-header img.cert-logo {
+  height: auto;
+}
+
+.cert-logo-pair {
+display: flex; align-items: center; gap: 0.5rem;
+}
