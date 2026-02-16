@@ -8,6 +8,7 @@
   --panel: #c7dbd2; /* Light moss panel */
   --text: #0f1a14; /* Deep spruce text */
   --muted: #5a6b62; /* Moss gray */
+  --more-muted: #808b83; /* Darker moss for secondary text */
   --brand: #1f8a5b; /* Pine */
   --brand-2: #3ccf7a; /* Fresh leaf */
   --danger: #b33434; /* Calibrated against light bg */
@@ -24,6 +25,7 @@
   --panel: #0b1220;
   --text: #e2e8f0;
   --muted: #94a3b8;
+  --more-muted: #64748b;
   --brand: #3ddc97;
   --brand-2: #22c55e;
   --danger: #ef4444;
@@ -220,10 +222,9 @@ label {
   margin: 0.4rem 0;
 }
 .footer {
-  padding: 2rem 1.5rem;
+  padding: 6rem 1.5rem;
   color: var(--muted);
   text-align: center;
-  border-top: 1px solid #1e293b;
   margin-top: 2rem;
 }
 .badge {
