@@ -15,7 +15,6 @@
   --herobtn: #ffffff;
 }
 
-
 :root[data-theme="dark"] .hero {
   background-image: url("../img/forest-hero-dark.png");
 }
@@ -97,10 +96,10 @@ nav a:hover {
 .hero h1 {
   font-size: 2.2rem;
   margin: 0.2rem 0 1rem;
-  color: rgb(255,255,255);
+  color: rgb(255, 255, 255);
 }
 .hero p {
-  color: rgb(255,255,255);
+  color: rgb(255, 255, 255);
 }
 
 .btn.modules {
@@ -122,9 +121,29 @@ div.center-btn-modules {
   display: grid;
   gap: 1rem;
 }
-.grid.cols-3 {
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+/* Grid column utilities */
+.grid.cols-2 {
+  grid-template-columns: repeat(2, 1fr);
 }
+.grid.cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+.grid.cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* Grid column utilities */
+.grid.cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* Optional: responsive tweaks */
+@media (max-width: 640px) {
+  .grid.cols-2 {
+    grid-template-columns: 1fr;
+  } /* stack on small screens */
+}
+
 .card {
   background: var(--panel);
   border: 1px solid #1e293b;
@@ -400,7 +419,7 @@ fieldset {
 }
 
 .btn.ghost:hover {
-  background: rgba(31, 138, 91, 0.10);
+  background: rgba(31, 138, 91, 0.1);
 }
 .btn-block {
   width: 100%;
