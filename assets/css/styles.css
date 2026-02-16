@@ -12,21 +12,9 @@
   --brand-2: #3ccf7a; /* Fresh leaf */
   --danger: #b33434; /* Calibrated against light bg */
   --link: #2396c2; /* Breezy blue-green */
+  --herobtn: #ffffff;
 }
 
-/* Respect system preference when no explicit data-theme is set */
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme]) {
-    --bg: #f3f7f5; /* Forest mist */
-    --panel: #eaf3ef; /* Light moss panel */
-    --text: #0f1a14; /* Deep spruce text */
-    --muted: #5a6b62; /* Moss gray */
-    --brand: #1f8a5b; /* Pine */
-    --brand-2: #3ccf7a; /* Fresh leaf */
-    --danger: #b33434; /* Calibrated against light bg */
-    --link: #2396c2; /* Breezy blue-green */
-  }
-}
 
 :root[data-theme="dark"] .hero {
   background-image: url("../img/forest-hero-dark.png");
@@ -41,6 +29,7 @@
   --brand-2: #22c55e;
   --danger: #ef4444;
   --link: #7dd3fc;
+  --herobtn: #ffffff;
 }
 * {
   box-sizing: border-box;
@@ -101,16 +90,33 @@ nav a:hover {
   padding: 4rem 1.5rem;
   text-align: center;
   /*background: linear-gradient(160deg, rgba(61, 220, 151, 0.15), transparent);*/
-  background-image: url("../img/forest-hero.png");
+  background-image: url("../img/forest-hero-dark.png");
   background-size: cover;
   background-position: center;
 }
 .hero h1 {
   font-size: 2.2rem;
   margin: 0.2rem 0 1rem;
+  color: rgb(255,255,255);
 }
 .hero p {
-  color: var(--muted);
+  color: rgb(255,255,255);
+}
+
+.btn.modules {
+  color: var(--herobtn);
+  border-style: solid;
+  border-color: var(--herobtn);
+  border-width: 1px;
+}
+
+btn.open-modules {
+  text-align: center;
+}
+
+div.center-btn-modules {
+  display: flex;
+  justify-content: center;
 }
 .grid {
   display: grid;

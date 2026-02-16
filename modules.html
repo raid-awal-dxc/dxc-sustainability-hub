@@ -139,7 +139,7 @@
         root.innerHTML = modules
           .map(
             (m) =>
-              `<article class=\"card\"><h3>${m.title}</h3><p>${m.description || ""}</p><p><small>Duration: ${m.duration || "—"} • Level: ${m.level || "All"}</small></p><a class=\"btn primary\" href=\"module.html?slug=${encodeURIComponent(m.slug)}\">Open Module</a></article>`,
+              `<article class=\"card\"><h3>${m.title}</h3><p>${m.description || ""}</p><p><small>Duration: ${m.duration || "—"} • Level: ${m.level || "All"}</small></p><div class=\"center-btn-modules\"><a class=\"btn primary open-modules\" href=\"module.html?slug=${encodeURIComponent(m.slug)}\">Open Module</a></div></article>`,
           )
           .join("");
       })();
