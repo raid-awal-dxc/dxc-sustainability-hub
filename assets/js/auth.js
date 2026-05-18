@@ -1,5 +1,22 @@
 
-async function handleRegister(e){ e.preventDefault(); const email=reg_email.value.trim(); const password=reg_password.value.trim(); const fullName=reg_fullname.value.trim(); const {error}=await supabaseClient.auth.signUp({ email, password, options:{data:{full_name:fullName}} }); if(error) return alert(error.message); alert('Check your email to confirm your account.'); window.location.href='login.html'; }
+async function handleRegister(e){
+	e.preventDefault();
+	const email = reg_email.value.trim();
+	const password = reg_password.value.trim();
+	const fullName = reg_fullname.value.trim();
+	const redirect = (window.ENV && window.ENV.AUTH_CONFIRM_REDIRECT) ? window.ENV.AUTH_CONFIRM_REDIRECT : (window.location.origin + '/login.html');
+	const { error } = await supabaseClient.auth.signUp({
+		email,
+		password,
+		options: {
+			data: { full_name: fullName },
+			emailRedirectTo: redirect
+		}
+	});
+	if(error) return alert(error.message);
+	alert('Check your email to confirm your account.');
+	window.location.href = 'login.html';
+}
 async function handleLogin(e){ e.preventDefault(); const email=login_email.value.trim(); const password=login_password.value.trim(); const {error}=await supabaseClient.auth.signInWithPassword({email,password}); if(error) return alert(error.message); window.location.href='dashboard.html'; }
 async function handleLogout(){ await supabaseClient.auth.signOut(); window.location.href='index.html'; }
 
@@ -8,7 +25,8 @@ async function handleRequestPasswordReset(e){
 	if(e && e.preventDefault) e.preventDefault();
 	const email = (typeof reset_email !== 'undefined' && reset_email.value) ? reset_email.value.trim() : '';
 	if(!email) return alert('Please enter your email address.');
-	const { error } = await supabaseClient.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/reset.html' });
+	const redirect = (window.ENV && window.ENV.PASSWORD_RESET_REDIRECT) ? window.ENV.PASSWORD_RESET_REDIRECT : (window.location.origin + '/reset.html');
+	const { error } = await supabaseClient.auth.resetPasswordForEmail(email, { redirectTo: redirect });
 	if(error) return alert(error.message);
 	alert('Check your email for password reset instructions.');
 }
