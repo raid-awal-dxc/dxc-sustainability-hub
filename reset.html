@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Reset Password • Sustainability Hub</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/config.example.js"></script>
+    <script src="assets/js/supabase.js"></script>
+    <script src="assets/js/ui.js"></script>
+  </head>
+  <body>
+    <main class="container">
+      <div style="max-width: 560px; margin: 2rem auto">
+        <div class="auth-container">
+          <section class="auth-form active">
+            <h2>Set a new password</h2>
+            <p id="reset-note" class="form-subtitle">Follow the link from your email to set a new password.</p>
+            <form onsubmit="handleCompleteReset(event)">
+              <div class="form-group">
+                <label for="new_password">New password</label>
+                <input type="password" id="new_password" placeholder="••••••••" minlength="6" required />
+              </div>
+              <button class="btn primary btn-block" type="submit">Set password</button>
+            </form>
+          </section>
+        </div>
+      </div>
+    </main>
+    <script src="assets/js/auth.js"></script>
+    <script>
+      (async function(){
+        try{
+          const { data, error } = await supabaseClient.auth.getSessionFromUrl({ storeSession: false });
+          if(error){
+            document.getElementById('reset-note').textContent = 'If you clicked a password reset link, it should have opened this page. Enter a new password to complete the reset.';
+            console.warn('getSessionFromUrl:', error.message || error);
+          } else {
+            document.getElementById('reset-note').textContent = 'Enter your new password below.';
+          }
+        }catch(err){
+          console.warn('getSessionFromUrl threw', err.message || err);
+        }
+      })();
+    </script>
+  </body>
+</html>

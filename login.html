@@ -133,6 +133,30 @@
               <button class="btn primary btn-block" type="submit">
                 Sign In
               </button>
+              <p style="margin-top:0.5rem;text-align:right;">
+                <a href="#" onclick="switchAuthTab('reset')">Forgot password?</a>
+              </p>
+            </form>
+          </section>
+
+          <!-- Reset Password Form -->
+          <section id="reset-section" class="auth-form">
+            <h2>Reset password</h2>
+            <p class="form-subtitle">Enter your email to receive reset instructions</p>
+            <form onsubmit="handleRequestPasswordReset(event)">
+              <div class="form-group">
+                <label for="reset_email">Email address</label>
+                <input
+                  type="email"
+                  id="reset_email"
+                  placeholder="you@example.com"
+                  required
+                />
+              </div>
+              <button class="btn primary btn-block" type="submit">Send reset email</button>
+              <p style="margin-top:0.5rem;text-align:right;">
+                <a href="#" onclick="switchAuthTab('login')">Back to Sign In</a>
+              </p>
             </form>
           </section>
 
