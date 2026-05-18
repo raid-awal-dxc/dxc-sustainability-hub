@@ -105,6 +105,13 @@
             >
               Create Account
             </button>
+            <button
+              class="auth-tab"
+              data-tab="reset"
+              onclick="switchAuthTab('reset')"
+            >
+              Reset
+            </button>
           </div>
 
           <!-- Login Form -->
@@ -205,17 +212,19 @@
     <script src="assets/js/auth.js"></script>
     <script>
       function switchAuthTab(tab) {
-        // Update tab buttons
+        // Update tab buttons (if present)
         document.querySelectorAll(".auth-tab").forEach((t) => {
           t.classList.remove("active");
         });
-        document.querySelector(`[data-tab="${tab}"]`).classList.add("active");
+        const tabBtn = document.querySelector(`[data-tab="${tab}"]`);
+        if (tabBtn) tabBtn.classList.add("active");
 
         // Update form sections
         document.querySelectorAll(".auth-form").forEach((form) => {
           form.classList.remove("active");
         });
-        document.getElementById(`${tab}-section`).classList.add("active");
+        const section = document.getElementById(`${tab}-section`);
+        if (section) section.classList.add("active");
       }
     </script>
   </body>
