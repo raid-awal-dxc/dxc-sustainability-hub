@@ -89,143 +89,30 @@
     <main class="container">
       <div style="max-width: 560px; margin: 2rem auto">
         <div class="auth-container">
-          <!-- Tab Navigation -->
-          <div class="auth-tabs">
-            <button
-              class="auth-tab active"
-              data-tab="login"
-              onclick="switchAuthTab('login')"
-            >
-              Sign In
-            </button>
-            <button
-              class="auth-tab"
-              data-tab="register"
-              onclick="switchAuthTab('register')"
-            >
-              Create Account
-            </button>
-            <button
-              class="auth-tab"
-              data-tab="reset"
-              onclick="switchAuthTab('reset')"
-            >
-              Reset
-            </button>
-          </div>
-
-          <!-- Login Form -->
+          <!-- Entra-only Login -->
           <section id="login-section" class="auth-form active">
-            <h2>Welcome back</h2>
-            <p class="form-subtitle">Sign in to your account to continue</p>
-            <form onsubmit="handleLogin(event)">
-              <div class="form-group">
-                <label for="login_email">Email address</label>
-                <input
-                  type="email"
-                  id="login_email"
-                  placeholder="you@example.com"
-                  required
-                />
-              </div>
-              <div class="form-group">
-                <label for="login_password">Password</label>
-                <input
-                  type="password"
-                  id="login_password"
-                  placeholder="••••••••"
-                  required
-                />
-              </div>
-              <button class="btn primary btn-block" type="submit">
-                Sign In
-              </button>
-              <div style="margin-top:0.75rem; display:flex; justify-content:space-between; gap:0.5rem; align-items:center;">
-                <span></span>
-                <button type="button" class="btn ghost" onclick="switchAuthTab('reset')" style="background:transparent;border:1px solid transparent;color:var(--link);padding:0.4rem 0.6rem;border-radius:0.4rem;">Forgot password?</button>
-              </div>
-            </form>
-          </section>
-
-          <!-- Reset Password Form -->
-          <section id="reset-section" class="auth-form">
-            <h2>Reset password</h2>
-            <p class="form-subtitle">Enter your email to receive reset instructions</p>
-            <form onsubmit="handleRequestPasswordReset(event)">
-              <div class="form-group">
-                <label for="reset_email">Email address</label>
-                <input
-                  type="email"
-                  id="reset_email"
-                  placeholder="you@example.com"
-                  required
-                />
-              </div>
-              <button class="btn primary btn-block" type="submit">Send reset email</button>
-              <p style="margin-top:0.5rem;text-align:right;">
-                <a href="#" onclick="switchAuthTab('login')">Back to Sign In</a>
-              </p>
-            </form>
-          </section>
-
-          <!-- Register Form -->
-          <section id="register-section" class="auth-form">
-            <h2>Create account</h2>
-            <p class="form-subtitle">Join the Sustainability Community</p>
-            <form onsubmit="handleRegister(event)">
-              <div class="form-group">
-                <label for="reg_fullname">Full name</label>
-                <input
-                  type="text"
-                  id="reg_fullname"
-                  placeholder="Your name"
-                  required
-                />
-              </div>
-              <div class="form-group">
-                <label for="reg_email">Email address</label>
-                <input
-                  type="email"
-                  id="reg_email"
-                  placeholder="you@example.com"
-                  required
-                />
-              </div>
-              <div class="form-group">
-                <label for="reg_password">Password</label>
-                <input
-                  type="password"
-                  id="reg_password"
-                  placeholder="••••••••"
-                  minlength="6"
-                  required
-                />
-              </div>
-              <button class="btn primary btn-block" type="submit">
-                Create Account
-              </button>
-            </form>
+            <h2>Sign in with your DXC account</h2>
+            <p class="form-subtitle">
+              Use Microsoft Entra to access Sustainability Hub
+            </p>
+            <button
+              class="btn primary btn-block"
+              type="button"
+              onclick="handleMicrosoftLogin()"
+            >
+              Sign In with Microsoft Entra (DXC)
+            </button>
+            <p class="form-subtitle" style="margin-top: 0.5rem">
+              Use your DXC work account (for example, name@dxc.com).
+            </p>
+            <p style="margin-top: 1rem; color: var(--muted)">
+              Password sign-in, account creation, and reset are disabled for
+              this site.
+            </p>
           </section>
         </div>
       </div>
     </main>
     <script src="assets/js/auth.js"></script>
-    <script>
-      function switchAuthTab(tab) {
-        // Update tab buttons (if present)
-        document.querySelectorAll(".auth-tab").forEach((t) => {
-          t.classList.remove("active");
-        });
-        const tabBtn = document.querySelector(`[data-tab="${tab}"]`);
-        if (tabBtn) tabBtn.classList.add("active");
-
-        // Update form sections
-        document.querySelectorAll(".auth-form").forEach((form) => {
-          form.classList.remove("active");
-        });
-        const section = document.getElementById(`${tab}-section`);
-        if (section) section.classList.add("active");
-      }
-    </script>
   </body>
 </html>
