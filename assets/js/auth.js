@@ -58,15 +58,65 @@ async function handleMicrosoftLogin() {
     queryParams.tenant = rawTenantHint;
   }
 
-  const { error } = await supabaseClient.auth.signInWithOAuth({
+  console.log("Initiating Microsoft login with redirectTo:", redirectTo);
+  console.log("Allowed domain:", allowedDomain);
+  console.log("Tenant hint:", rawTenantHint);
+
+  const { error, data } = await supabaseClient.auth.signInWithOAuth({
     provider: "azure",
     options: {
       redirectTo,
+      scopes: "openid profile email",
       queryParams,
     },
   });
 
-  if (error) return alert(error.message);
+  if (error) {
+    console.error("OAuth sign-in error:", error);
+    return alert(error.message);
+  }
+
+  console.log("OAuth sign-in response:", data);
+}
+
+function getAuthErrorFromUrl() {
+  const readError = (raw) => {
+    if (!raw) return null;
+    const params = new URLSearchParams(raw.replace(/^#/, ""));
+    const code = params.get("error_code") || params.get("error");
+    const description = params.get("error_description");
+    if (!code && !description) return null;
+    return {
+      code: code || "oauth_error",
+      description: description || "Unexpected authentication error.",
+    };
+  };
+
+  return readError(window.location.search) || readError(window.location.hash);
+}
+
+function handleOAuthCallbackError() {
+  const authError = getAuthErrorFromUrl();
+  if (!authError) return;
+
+  const decodedDescription = decodeURIComponent(authError.description || "");
+  console.error("OAuth callback error:", authError.code, decodedDescription);
+
+  let message = `Sign-in failed (${authError.code}): ${decodedDescription}`;
+  if (
+    decodedDescription.includes(
+      "Error getting user email from external provider",
+    )
+  ) {
+    message =
+      "Sign-in failed because Microsoft Entra did not return an email claim. " +
+      "In your Entra app registration, add optional ID token claim 'email' and ensure delegated scopes include openid, profile, and email, then grant admin consent.";
+  }
+
+  alert(message);
+
+  const cleanUrl = window.location.origin + window.location.pathname;
+  window.history.replaceState({}, document.title, cleanUrl);
 }
 
 async function enforceDxcEmailAccess() {
@@ -157,5 +207,12 @@ async function handleCompleteReset(e) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  handleOAuthCallbackError();
   enforceDxcEmailAccess();
+
+  supabaseClient.auth.onAuthStateChange((_event, session) => {
+    if (session && session.user) {
+      enforceDxcEmailAccess();
+    }
+  });
 });
