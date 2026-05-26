@@ -1,17 +1,32 @@
 async function renderCertificate() {
-  const user = await requireAuth();
   const params = new URLSearchParams(window.location.search);
+  const hostname = window.location.hostname.toLowerCase();
+  const isLocalHost =
+    hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1";
+  const isLocalPreviewMode = isLocalHost && params.get("preview") === "1";
+
+  let user = null;
+  if (!isLocalPreviewMode) {
+    user = await requireAuth();
+  }
+
   const moduleId = params.get("module_id");
-  const code = params.get("code");
-  const score = params.get("score");
-  const { data: mod } = await supabaseClient
-    .from("modules")
-    .select("title")
-    .eq("id", moduleId)
-    .single();
-  const moduleTitle = mod?.title || "Completed Module";
-  const metadata = user.user_metadata || {};
+  const code = params.get("code") || "LOCAL-PREVIEW";
+  const score = params.get("score") || "100";
+
+  let moduleTitle = params.get("module_title") || "Completed Module";
+  if (moduleId && !isLocalPreviewMode) {
+    const { data: mod } = await supabaseClient
+      .from("modules")
+      .select("title")
+      .eq("id", moduleId)
+      .single();
+    moduleTitle = mod?.title || moduleTitle;
+  }
+
+  const metadata = user?.user_metadata || {};
   const preferredName =
+    params.get("name") ||
     metadata.full_name ||
     metadata.name ||
     [metadata.first_name, metadata.last_name].filter(Boolean).join(" ") ||
@@ -25,7 +40,7 @@ async function renderCertificate() {
         .reverse()
         .join(" ")
         .replace(/\s+/g, " ")
-    : rawName || user.email;
+    : rawName || user?.email || "Local Preview User";
   document.getElementById("cert-name").textContent = displayName;
   document.getElementById("cert-module").textContent = moduleTitle;
   document.getElementById("cert-date").textContent =
