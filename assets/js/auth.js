@@ -7,7 +7,7 @@ async function handleRegister(e) {
     window.ENV && window.ENV.AUTH_CONFIRM_REDIRECT
       ? window.ENV.AUTH_CONFIRM_REDIRECT
       : window.location.origin + "/login.html";
-  const { error } = await supabaseClient.auth.signUp({
+  const { data, error } = await supabaseClient.auth.signUp({
     email,
     password,
     options: {
@@ -16,6 +16,8 @@ async function handleRegister(e) {
     },
   });
   if (error) return alert(error.message);
+  // Attempt to enroll the newly created user in all modules. This may
+  // run before the user has confirmed email; it's idempotent.
   alert("Check your email to confirm your account.");
   window.location.href = "login.html";
 }
@@ -213,6 +215,17 @@ document.addEventListener("DOMContentLoaded", () => {
   supabaseClient.auth.onAuthStateChange((_event, session) => {
     if (session && session.user) {
       enforceDxcEmailAccess();
+      // Ensure the user has enrollments — enroll in all modules if none exist.
+      (async () => {
+        try {
+          const enrolls = await listUserEnrollments(session.user.id);
+          if (!enrolls || enrolls.length === 0) {
+            await enrollUserInAllModules(session.user.id);
+          }
+        } catch (err) {
+          console.error("ensure enrollments failed:", err?.message || err);
+        }
+      })();
     }
   });
 });

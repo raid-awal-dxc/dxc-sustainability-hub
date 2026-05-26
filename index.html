@@ -197,21 +197,20 @@
           if (!user) return;
 
           const enrollments = await listUserEnrollments(user.id);
-          if (enrollments.length === 0) return;
 
-          // Calculate total progress across all modules
-          const totalProgress =
-            enrollments.length > 0
-              ? Math.round(
-                  enrollments.reduce((sum, e) => sum + e.progress, 0) /
-                    enrollments.length,
-                )
-              : 0;
+          // Count unenrolled modules as 0%: fetch total modules and average
+          const modules = await listModules();
+          const totalModules = modules.length || 0;
+          if (totalModules === 0) return;
 
-          document.getElementById("progress-text").textContent =
-            totalProgress + "%";
-          document.getElementById("progress-bar").style.width =
-            totalProgress + "%";
+          // Map enrollments by module_id for quick lookup
+          const enrollMap = new Map((enrollments || []).map((e) => [e.module_id, e.progress || 0]));
+
+          const sumProgress = modules.reduce((sum, m) => sum + (enrollMap.get(m.id) || 0), 0);
+          const totalProgress = Math.round(sumProgress / totalModules);
+
+          document.getElementById("progress-text").textContent = totalProgress + "%";
+          document.getElementById("progress-bar").style.width = totalProgress + "%";
         } catch (error) {
           console.error("Error loading progress:", error);
         }

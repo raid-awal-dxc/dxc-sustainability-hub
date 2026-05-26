@@ -161,3 +161,10 @@ async function getCertificateByModuleId(userId, moduleId) {
   if (error) throw error;
   return data;
 }
+
+// Enroll a user in all modules (idempotent)
+async function enrollUserInAllModules(userId) {
+  const modules = await listModules();
+  const promises = modules.map((m) => getOrCreateEnrollment(userId, m.id));
+  return Promise.all(promises);
+}
