@@ -10,7 +10,13 @@ async function renderCertificate() {
     .eq("id", moduleId)
     .single();
   const moduleTitle = mod?.title || "Completed Module";
-  const rawName = (user.user_metadata?.full_name || "").trim();
+  const metadata = user.user_metadata || {};
+  const preferredName =
+    metadata.full_name ||
+    metadata.name ||
+    [metadata.first_name, metadata.last_name].filter(Boolean).join(" ") ||
+    [metadata.given_name, metadata.family_name].filter(Boolean).join(" ");
+  const rawName = String(preferredName || "").trim();
   const displayName = rawName.includes(",")
     ? rawName
         .split(",")
@@ -18,6 +24,7 @@ async function renderCertificate() {
         .filter(Boolean)
         .reverse()
         .join(" ")
+        .replace(/\s+/g, " ")
     : rawName || user.email;
   document.getElementById("cert-name").textContent = displayName;
   document.getElementById("cert-module").textContent = moduleTitle;
