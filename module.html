@@ -30,7 +30,15 @@
   <body>
     <nav class="container">
       <div class="brand">
-        <img class="site-logo" src="assets/img/DXC-Full-Color.svg" data-logo-dark="assets/img/DXC-Full-Color.svg" data-logo-light="assets/img/DXC-Full-Color.svg" alt="DXC" width="80" height="28"/>
+        <img
+          class="site-logo"
+          src="assets/img/DXC-Full-Color.svg"
+          data-logo-dark="assets/img/DXC-Full-Color.svg"
+          data-logo-light="assets/img/DXC-Full-Color.svg"
+          alt="DXC"
+          width="80"
+          height="28"
+        />
         <img
           class="site-logo"
           src="assets/img/logo-dark.svg"
@@ -82,17 +90,18 @@
     </nav>
 
     <script>
-      
-      const nav = document.getElementById('nav-auth');
-      const tokenKey = Object.keys(localStorage).find(k => k.includes('auth-token'));
+      const nav = document.getElementById("nav-auth");
+      const tokenKey = Object.keys(localStorage).find((k) =>
+        k.includes("auth-token"),
+      );
 
       if (tokenKey) {
-        nav.textContent = 'Sign out';
-        nav.href = '#';
+        nav.textContent = "Sign out";
+        nav.href = "#";
         nav.onclick = () => handleLogout();
       } else {
-        nav.textContent = 'Login';
-        nav.href = 'login.html';
+        nav.textContent = "Login";
+        nav.href = "login.html";
         window.location.href = "login.html";
       }
     </script>
@@ -102,7 +111,6 @@
       <div style="margin-top: 1rem" id="cta"></div>
     </main>
     <script>
-      
       function formatStatus(status) {
         if (!status) return "";
         if (status === "in_progress") return "In Progress";
@@ -245,6 +253,9 @@
 
         // Render module
         moduleRoot.innerHTML = `
+    <div style="margin-bottom: 1rem">
+      <a href="modules.html" class="btn ghost" aria-label="Back to modules">&larr; Back to Modules</a>
+    </div>
     <h2>${mod.title}</h2>
     <p>${mod.description || ""}</p>
 
