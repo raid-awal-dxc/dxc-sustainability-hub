@@ -18,12 +18,6 @@ async function handleRegister(e) {
   if (error) return alert(error.message);
   // Attempt to enroll the newly created user in all modules. This may
   // run before the user has confirmed email; it's idempotent.
-  try {
-    const userId = data && data.user ? data.user.id : null;
-    if (userId) await enrollUserInAllModules(userId);
-  } catch (err) {
-    console.warn("Auto-enroll after signUp failed:", err?.message || err);
-  }
   alert("Check your email to confirm your account.");
   window.location.href = "login.html";
 }
