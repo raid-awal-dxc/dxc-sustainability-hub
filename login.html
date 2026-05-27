@@ -106,13 +106,56 @@
               Use your DXC work account (for example, name@dxc.com).
             </p>
             <p style="margin-top: 1rem; color: var(--muted)">
-              Password sign-in, account creation, and reset are disabled for
-              this site.
+              <span id="password-disabled-note">Password sign-in, account creation, and reset are disabled for this site.</span>
             </p>
+          </section>
+          <!-- Demo login (hidden by default) -->
+          <section id="demo-section" class="auth-form" style="display:none; margin-top:1rem;">
+            <h2>Demo User</h2>
+            <p class="form-subtitle">Quick demo access using a local demo account.</p>
+            <p style="color:var(--muted);">You must create the demo user in the database and set `DEMO_USER_EMAIL` in `config.js`.</p>
+            <button class="btn ghost btn-block" type="button" onclick="handleDemoLogin()">Sign in as Demo User</button>
           </section>
         </div>
       </div>
     </main>
+    <script>
+      (function showDemoWithDebug() {
+        try {
+          console.log("DEBUG: login page init - window.ENV =", JSON.stringify(window.ENV));
+        } catch (e) {
+          console.log("DEBUG: login page init - window.ENV =", window.ENV);
+        }
+
+        function render() {
+          const demo = document.getElementById("demo-section");
+          const note = document.getElementById("password-disabled-note");
+          if (window.ENV && window.ENV.DEMO_USER_ENABLED) {
+            if (demo) demo.style.display = "block";
+            if (note) note.textContent = "Password sign-in is enabled for the demo user.";
+            console.log("DEBUG: Demo UI shown; DEMO_USER_EMAIL=", window.ENV.DEMO_USER_EMAIL);
+          } else {
+            if (demo) demo.style.display = "none";
+            if (note) note.textContent = "Password sign-in, account creation, and reset are disabled for this site.";
+            console.log("DEBUG: Demo hidden or window.ENV missing", window.ENV);
+          }
+        }
+
+        if (window.ENV) {
+          render();
+        } else {
+          // Retry briefly in case config is loaded after this script
+          let tries = 0;
+          const id = setInterval(() => {
+            tries++;
+            if (window.ENV || tries > 5) {
+              clearInterval(id);
+              render();
+            }
+          }, 100);
+        }
+      })();
+    </script>
     <script src="assets/js/auth.js"></script>
   </body>
 </html>

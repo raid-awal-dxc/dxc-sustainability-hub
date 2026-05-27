@@ -128,7 +128,15 @@ async function enforceDxcEmailAccess() {
   } = await supabaseClient.auth.getUser();
   if (error || !user || !user.email) return;
 
-  if (!isAllowedDxcEmail(user.email)) {
+  // Allow demo user to bypass DXC email enforcement when demo is enabled
+  if (
+    window.ENV &&
+    window.ENV.DEMO_USER_ENABLED &&
+    window.ENV.DEMO_USER_EMAIL &&
+    user.email === String(window.ENV.DEMO_USER_EMAIL).trim()
+  ) {
+    // Demo user allowed
+  } else if (!isAllowedDxcEmail(user.email)) {
     await supabaseClient.auth.signOut();
     alert(`Only ${getAllowedEmailDomain()} email addresses can sign in.`);
     return;
@@ -148,6 +156,23 @@ async function handleLogin(e) {
   const password = login_password.value.trim();
   const { error } = await supabaseClient.auth.signInWithPassword({
     email,
+    password,
+  });
+  if (error) return alert(error.message);
+  window.location.href = "dashboard.html";
+}
+
+// Demo login: prompt for demo password and sign in using the configured demo email
+async function handleDemoLogin() {
+  if (!window.ENV || !window.ENV.DEMO_USER_ENABLED) {
+    return alert("Demo login is not enabled.");
+  }
+  const demoEmail = window.ENV.DEMO_USER_EMAIL;
+  if (!demoEmail) return alert("Demo email is not configured.");
+  const password = prompt(`Enter password for demo user ${demoEmail}:`);
+  if (!password) return;
+  const { error } = await supabaseClient.auth.signInWithPassword({
+    email: String(demoEmail).trim(),
     password,
   });
   if (error) return alert(error.message);
